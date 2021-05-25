@@ -415,7 +415,7 @@ write.csv(comb_uncensored,
           row.names = F,
           quote = F
         )
-ENRICH_OBJ <- synapser::store( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File( 
   path='Full_ROSMAP_RNASeq_Covariates_Uncensored.csv',
   name = 'RosMap Ages Uncensored Full Covariates',
   parentId=activity$properties$id ),
