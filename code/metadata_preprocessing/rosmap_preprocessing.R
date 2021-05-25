@@ -395,20 +395,35 @@ all.annotations = list(
 )
 
 #Github Code Pull
-
-
-thisRepo <- githubr::getRepo(repository = "Sage-Bionetworks/ampad-rnaseq-reprocessing", ref="branch", refName='main')
-thisFile <- githubr::getPermlink(repository = thisRepo, repositoryPath=paste0('code/metadata_preprocessing/','rosmap_preprocessing.R'))
-
-this_repo <- githubr::getRepo(
-  repository = 'Sage-Bionetworks/ampad-rnaseq-reprocessing',
+thisRepo <- githubr::getRepo(
+  repository = "Sage-Bionetworks/ampad-rnaseq-reprocessing",
   ref="branch",
   refName='main'
 )
-this_file <- githubr::getPermlink(
-  repository = this_repo,
-  repositoryPath = code
+thisFile <- githubr::getPermlink(
+  repository = thisRepo,
+  repositoryPath=paste0('code/metadata_preprocessing/',
+                        'rosmap_preprocessing.R'
+                       )
 )
 
+activityName = 'Full RosMap Metadata'
+activityDescription = 'Cleaned Codified and Recoded Ages Uncensored Metadata'
 
+write.csv(comb_uncensored,
+          file = 'Full_ROSMAP_RNASeq_Covariates_Uncensored.csv',
+          row.names = F,
+          quote = F
+        )
+ENRICH_OBJ <- synapser::store( synapser::File( 
+  path='Full_ROSMAP_RNASeq_Covariates_Uncensored.csv',
+  name = 'RosMap Ages Uncensored Full Covariates',
+  parentId=activity$properties$id ),
+  used = synids_used,
+  activityName = activityName,
+  executed = thisFile,
+  activityDescription = activityDescription
+)
+syn_temp$setAnnotations(ENRICH_OBJ, annotations = all.annotations)
+file.remove("Full_ROSMAP_RNASeq_Covariates_Uncensored.csv")
  
