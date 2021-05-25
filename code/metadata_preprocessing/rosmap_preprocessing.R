@@ -424,6 +424,35 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
   executed = thisFile,
   activityDescription = activityDescription
 )
-syn_temp$setAnnotations(ENRICH_OBJ, annotations = all.annotations)
+synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Full_ROSMAP_RNASeq_Covariates_Uncensored.csv")
- 
+
+# Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
+
+comb_uncensored_sageseqr <- comb_uncensored[,c(
+  'specimenID', 'individualID', 'diagnosis', 'race', 'spanish', 'braaksc', 
+  'ceradsc', 'cogdx', 'dcfdx_lv', 'apoe4_allele', 'sex', 'final_batch', 'pmi', 'RIN',
+  'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED', 
+  'RnaSeqMetrics_PCT_INTRONIC_BASES', 
+  'RnaSeqMetrics_PCT_INTERGENIC_BASES', 'RnaSeqMetrics_PCT_CODING_BASES'
+)]
+
+activityDescription = 'Cleaned Codified and Recoded Ages Uncensored Metadata'
+
+write.csv(comb_uncensored_sageseqr,
+          file = 'Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv',
+          row.names = F,
+          quote = F
+)
+ENRICH_OBJ <- synapser::synStore( synapser::File( 
+  path='Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv',
+  name = 'RosMap Ages Uncensored Sageseqr Input Covariates',
+  parentId=activity$properties$id ),
+  used = synids_used,
+  activityName = activityName,
+  executed = thisFile,
+  activityDescription = activityDescription
+)
+synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv")
+
