@@ -427,8 +427,7 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Full_ROSMAP_RNASeq_Covariates_Uncensored.csv")
 
-# Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
-
+## Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
 comb_uncensored_sageseqr <- comb_uncensored[,c(
   'specimenID', 'individualID', 'diagnosis', 'race', 'spanish', 'braaksc', 
   'ceradsc', 'cogdx', 'dcfdx_lv', 'apoe4_allele', 'sex', 'final_batch', 'pmi', 'RIN',
@@ -455,4 +454,92 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv")
+
+## Upload Sageseqr ages Censored file to synapse
+comb_censored_sageseqr <- comb[,colnames(comb_uncensored_sageseqr)]
+
+children <- synapser::synGetChildren(activity$properties$id)$asList()
+cesoredmeta_used <- NULL
+for(i in 1:length(children)) {
+  if(children[[i]]$name == "RosMap Ages Uncensored Sageseqr Input Covariates") {
+    cesoredmeta_used <- children[[i]]$id
+  }
+}
+
+censordmeta_parentid <- 'syn25808143'
+activity <- synapser::synGetEntity(censordmeta_parentid)
+activityName = 'Sageseqr Input Metadata'
+activityDescription = 'Cleaned Codified and Recoded Ages Censored Metadata'
+
+write.csv(comb_censored_sageseqr,
+          file = 'Sageseqr_ROSMAP_RNASeq_Covariates_Censored.csv',
+          row.names = F,
+          quote = F
+)
+
+ENRICH_OBJ <- synapser::synStore( synapser::File( 
+  path='Sageseqr_ROSMAP_RNASeq_Covariates_Censored.csv',
+  name = 'RosMap Ages Censored Sageseqr Input Covariates',
+  parentId=activity$properties$id ),
+  used = cesoredmeta_used,
+  activityName = activityName,
+  executed = thisFile,
+  activityDescription = activityDescription
+)
+synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Censored.csv")
+
+## Upload Sageseqr counts
+counts_used <- c('syn22283382', 'syn22301601', 'syn22314230')
+counts_parentid <- 'syn25808173'
+activity <- synapser::synGetEntity(counts_parentid)
+activityName = 'Sageseqr Input Metadata'
+activityDescription = 'Combined ROSMAP RNASeq Counts for input to SageSeqr'
+
+all.annotations.expression = list(
+  dataType = 'geneExpression',
+  dataSubtype = 'processed',
+  resourceType = 'experimentalData',
+  assay = 'rnaSeq',
+  nucleicAcidSource = "bulk cell",
+  isModelSystem = 'FALSE',
+  isConsortiumAnalysis = 'TRUE',
+  isMultiSpecimen = 'TRUE',
+  fileFormat = 'txt',
+  grant = 'U01AG046152',
+  species = 'Human',
+  organ = 'brain',
+  tissue = c('dorsolateral prefrontal cortex', 
+             'Head of caudate nucleus', 
+             'posterior cingulate cortex'
+  ),
+  study = c('ROSMAP','rnaSeqReprocessing'), 
+  consortium = 'AMP-AD'
+)
+
+counts_write <- counts
+counts_write$feature <- row.names(counts_write)
+counts_write <- counts_write[,c('feature',
+                colnames(counts_write)[!(colnames(counts_write) %in% 'feature')]
+               )
+            ]
+write.table(counts_write,
+          file = 'ROSMAP_counts.txt',
+          row.names = F,
+          col.names = T,
+          quote = F,
+          sep = '\t'
+)
+
+ENRICH_OBJ <- synapser::synStore( synapser::File( 
+  path='ROSMAP_counts.txt',
+  name = 'RosMap Sageseqr Input Counts',
+  parentId=activity$properties$id ),
+  used = counts_used,
+  activityName = activityName,
+  executed = thisFile,
+  activityDescription = activityDescription
+)
+synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+file.remove("ROSMAP_counts.txt")
 
