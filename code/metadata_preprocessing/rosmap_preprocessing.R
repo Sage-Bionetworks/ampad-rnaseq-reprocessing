@@ -541,5 +541,9 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
   activityDescription = activityDescription
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+<<<<<<< HEAD
 file.remove("ROSMAP_counts.txt")
+=======
+file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Censored.csv")
+>>>>>>> 696f1eeeef1be2d7a8256cea245a53a12071bbd4
 
