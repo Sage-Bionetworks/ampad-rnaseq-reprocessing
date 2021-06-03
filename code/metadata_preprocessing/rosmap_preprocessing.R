@@ -42,8 +42,8 @@ counts <- dplyr::left_join(counts_one, counts_two, by = 'feature') %>%
 counts <- counts[ row.names(counts)[ 
   !(row.names(counts) %in% 
       c('N_unmapped','N_multimapping','N_noFeature','N_ambiguous')
-   )
-  ],
+  )
+],
 ]
 ##############################################################################
 # Combine MetaData files for cohort
@@ -93,7 +93,7 @@ metrics_three <- as.matrix(data.table::fread(
 
 metrics <- as.data.frame(rbind(metrics_one, metrics_two, metrics_three), 
                          stringsAsFactors = F
-                        )
+)
 
 for(i in c(2,4:dim(metrics)[2])) {
   metrics[,i] <- as.numeric(metrics[,i])
@@ -105,15 +105,15 @@ synids_used <- c(synids_used, clinical)
 clinical <- read.csv(synapser::synGet(clinical)$path, stringsAsFactors = F)
 clinical$projid <- stringr::str_pad(as.character(clinical$projid), 8, pad = "0")
 table( paste0(clinical$projid, '_', clinical$individualID) %in% 
-       paste0(id_key$projid, '_', id_key$individualID) 
-     )
+         paste0(id_key$projid, '_', id_key$individualID) 
+)
 
 # biospecimin
 biospecimin <- 'syn21323366'
 synids_used <- c(synids_used, biospecimin)
 biospecimin <- read.csv(synapser::synGet(biospecimin)$path, 
                         stringsAsFactors = F
-                       )
+)
 
 biospecimin <- biospecimin[
   biospecimin$assay == 'rnaSeq' & 
@@ -125,7 +125,7 @@ assay <- 'syn21088596'
 synids_used <- c(synids_used, assay)
 assay <- read.csv(synapser::synGet(assay)$path,
                   stringsAsFactors = F
-                 )
+)
 
 #table(assay$specimenID %in% biospecimin$specimenID)
 #table(assay[
@@ -152,7 +152,7 @@ dim(comb)
 comb <- dplyr::right_join(comb, 
                           assay[assay$specimenID %in% comb$specimenID,],
                           by = 'specimenID'
-                         )
+)
 dim(comb[ is.na(comb$individualID), ])
 table(comb[ is.na(comb$individualID), ]$excludeReason)
 dim(comb)
@@ -212,7 +212,7 @@ for(name in colnames(comb)){
 message('Variables that are all NAs:')
 message(paste0('Variables that are all NAs: ', 
                paste(remove_na,collapse = ', ')
-              )
+)
 )
 # specimenIdSource, samplingDate, BrodmannArea, tissueWeight, tissueVolume, 
 # fastingState, isPostMortem, samplingAge, visitNumber, exclude, excludeReason, 
@@ -221,7 +221,7 @@ message(paste0('Variables that are all NAs: ',
 # Variables that are all Zeros
 message(paste0('Variables that are all Zeros: ',
                paste(all_zeros,collapse = ', ')
-              )
+)
 )
 # AlignmentSummaryMetrics__BAD_CYCLES, 
 # AlignmentSummaryMetrics__PF_HQ_MEDIAN_MISMATCHES, 
@@ -229,7 +229,7 @@ message(paste0('Variables that are all Zeros: ',
 
 message(paste0('Variables that are all the same value: ',
                paste(length_issue,collapse = ', ')
-              )
+)
 )
 # organ, sampleStatus, nucleicAcidSource, cellType, assay, 
 # AlignmentSummaryMetrics__BAD_CYCLES, AlignmentSummaryMetrics__CATEGORY, 
@@ -238,7 +238,7 @@ message(paste0('Variables that are all the same value: ',
 # AlignmentSummaryMetrics__PF_NOISE_READS, RnaSeqMetrics__IGNORED_READS 
 
 comb <- comb[,
-          colnames(comb)[!(colnames(comb) %in% c(remove_na,length_issue,all_zeros))]
+             colnames(comb)[!(colnames(comb) %in% c(remove_na,length_issue,all_zeros))]
 ]
 ##############################################################################
 # Read Length Issues for Will
@@ -283,11 +283,11 @@ comb$apoe4_allele <- apoe_trans[as.character(comb$apoe_genotype)]
 
 # notes (DataCuts and sequencingBatch -> final batch variable)
 #Batch IDs
-  #Collapse weird "0, 6, 7" into a single number batch
+#Collapse weird "0, 6, 7" into a single number batch
 comb[ comb$libraryBatch %in% "0, 6, 7", ]$sequencingBatch <- 9
 comb[ comb$libraryBatch %in% "0, 6, 7", ]$libraryBatch <- 9
 
-  # Remove letters from data cuts one and two
+# Remove letters from data cuts one and two
 comb$sequencingBatch <- gsub('NYGC', '', comb$sequencingBatch)
 comb$sequencingBatch <- gsub('RISK_', '',comb$sequencingBatch)
 
@@ -299,20 +299,22 @@ comb$final_batch <- paste0(comb$data_contribution, '_', comb$sequencingBatch)
 # Diagnosis
 comb$diagnosis <- 'OTHER'
 comb[ comb$braaksc >= 4 &
-                comb$ceradsc <= 2 &
-                comb$cogdx == 4  , ]$diagnosis <- 'AD'
+        comb$ceradsc <= 2 &
+        comb$cogdx == 4  , ]$diagnosis <- 'AD'
 comb[ comb$braaksc <= 3 &
         comb$ceradsc >= 3 &
         comb$cogdx == 1  , ]$diagnosis <- 'CT'
 
 colnames(comb) <- gsub('__', '_', colnames(comb))
 
+comb$Tissue.APOE4 <- paste0(comb$tissue,'.', comb$apoe4_allele)
+comb$RIN2 <- comb$RIN^2
 comb <- comb[, c("individualID", "specimenID", 'projid', 'Study', "tissue",
-                 'diagnosis', 'apoe_genotype', 'apoe4_allele', 'pmi', 'braaksc',
-                 'ceradsc', 'cogdx', 'dcfdx_lv', 'sex', 'educ', 'race',
-                 'spanish', 'age_at_visit_max', 'age_first_ad_dx', 'age_death', 
-                 'cts_mmse30_first_ad_dx', 'cts_mmse30_lv', 'RIN', 
-                 'libraryBatch', 'sequencingBatch', 'data_contribution', 
+                 'diagnosis', 'apoe_genotype', 'apoe4_allele', 'Tissue.APOE4', 
+                 'pmi', 'braaksc', 'ceradsc', 'cogdx', 'dcfdx_lv', 'sex', 
+                 'educ', 'race', 'spanish', 'age_at_visit_max', 'age_first_ad_dx',
+                 'age_death', 'cts_mmse30_first_ad_dx', 'cts_mmse30_lv', 'RIN', 
+                 'RIN2', 'libraryBatch', 'sequencingBatch', 'data_contribution', 
                  'final_batch', 'libraryPrep', 'libraryPreparationMethod', 
                  'readLength', "AlignmentSummaryMetrics_MEAN_READ_LENGTH", 
                  "AlignmentSummaryMetrics_PCT_ADAPTER", 
@@ -353,7 +355,6 @@ comb <- comb[, c("individualID", "specimenID", 'projid', 'Study', "tissue",
                  "RnaSeqMetrics_RIBOSOMAL_BASES",
                  "RnaSeqMetrics_UTR_BASES") ]
 
-
 ##############################################################################
 # Add PHI Ages over 90 for normalization
 ages_a <- as.data.frame(ages_a)
@@ -388,7 +389,7 @@ all.annotations = list(
   tissue = c('dorsolateral prefrontal cortex', 
              'Head of caudate nucleus', 
              'posterior cingulate cortex'
-            ),
+  ),
   study = c('ROSMAP','rnaSeqReprocessing'), 
   consortium = 'AMP-AD',
   assay = 'rnaSeq'
@@ -404,7 +405,7 @@ thisFile <- githubr::getPermlink(
   repository = thisRepo,
   repositoryPath=paste0('code/metadata_preprocessing/',
                         'rosmap_preprocessing.R'
-                       )
+  )
 )
 
 activityName = 'Full RosMap Metadata'
@@ -414,7 +415,7 @@ write.csv(comb_uncensored,
           file = 'Full_ROSMAP_RNASeq_Covariates_Uncensored.csv',
           row.names = F,
           quote = F
-        )
+)
 ENRICH_OBJ <- synapser::synStore( synapser::File( 
   path='Full_ROSMAP_RNASeq_Covariates_Uncensored.csv',
   name = 'RosMap Ages Uncensored Full Covariates',
@@ -429,8 +430,8 @@ file.remove("Full_ROSMAP_RNASeq_Covariates_Uncensored.csv")
 
 ## Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
 comb_uncensored_sageseqr <- comb_uncensored[,c(
-  'specimenID', 'individualID', 'diagnosis', 'race', 'spanish', 'braaksc', 
-  'ceradsc', 'cogdx', 'dcfdx_lv', 'apoe4_allele', 'sex', 'final_batch', 'pmi', 'RIN',
+  'specimenID', 'individualID', 'diagnosis', 'tissue', 'race', 'spanish', 'braaksc', 
+  'ceradsc', 'cogdx', 'dcfdx_lv', 'apoe4_allele', 'Tissue.APOE4', 'sex', 'final_batch', 'pmi', 'RIN', 'RIN2',
   'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED', 
   'RnaSeqMetrics_PCT_INTRONIC_BASES', 
   'RnaSeqMetrics_PCT_INTERGENIC_BASES', 'RnaSeqMetrics_PCT_CODING_BASES'
@@ -520,15 +521,15 @@ all.annotations.expression = list(
 counts_write <- counts
 counts_write$feature <- row.names(counts_write)
 counts_write <- counts_write[,c('feature',
-                colnames(counts_write)[!(colnames(counts_write) %in% 'feature')]
-               )
-            ]
+                                colnames(counts_write)[!(colnames(counts_write) %in% 'feature')]
+)
+]
 write.table(counts_write,
-          file = 'ROSMAP_counts.txt',
-          row.names = F,
-          col.names = T,
-          quote = F,
-          sep = '\t'
+            file = 'ROSMAP_counts.txt',
+            row.names = F,
+            col.names = T,
+            quote = F,
+            sep = '\t'
 )
 
 ENRICH_OBJ <- synapser::synStore( synapser::File( 
@@ -542,4 +543,3 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
 file.remove("ROSMAP_counts.txt")
-
