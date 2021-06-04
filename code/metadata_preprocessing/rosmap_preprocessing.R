@@ -494,7 +494,7 @@ file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Censored.csv")
 counts_used <- c('syn22283382', 'syn22301601', 'syn22314230')
 counts_parentid <- 'syn25808173'
 activity <- synapser::synGetEntity(counts_parentid)
-activityName = 'Sageseqr Input Metadata'
+activityName = 'Sageseqr Input Counts'
 activityDescription = 'Combined ROSMAP RNASeq Counts for input to SageSeqr'
 
 all.annotations.expression = list(
@@ -511,7 +511,7 @@ all.annotations.expression = list(
   species = 'Human',
   organ = 'brain',
   tissue = c('dorsolateral prefrontal cortex', 
-             'Head of caudate nucleus', 
+             'head of caudate nucleus', 
              'posterior cingulate cortex'
   ),
   study = c('ROSMAP','rnaSeqReprocessing'), 
