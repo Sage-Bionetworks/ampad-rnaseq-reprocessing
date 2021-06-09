@@ -111,6 +111,8 @@ clinical[ clinical$race == 'H', ]$race <- 9
 
 ##### Code Diagnosis #####
 # Diagnosis
+colnames(clinical)[ colnames(clinical) == 'Braak'] <- 'braaksc'
+
 clinical$diagnosis <- 'OTHER'
 clinical[ clinical$braaksc >= 4 &
             clinical$ceradsc <= 2 &
@@ -118,10 +120,6 @@ clinical[ clinical$braaksc >= 4 &
 clinical[ clinical$braaksc <= 3 &
             clinical$ceradsc >= 3 &
             clinical$CDR <= 0.5  , ]$diagnosis <- 'CT'
-
-
-#Braaksc/Braak
-colnames(clinical)[colnames(clinical) == 'Braak'] <- 'braaksc'
 
 # apoe Allele:
 clinical$apoe4_allele <- NA
