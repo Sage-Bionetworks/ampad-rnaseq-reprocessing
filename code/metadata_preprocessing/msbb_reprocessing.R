@@ -418,7 +418,7 @@ all.annotations.expression = list(
   consortium = 'AMP-AD'
 )
 
-counts_write <- count
+counts_write <- counts
 counts_write$feature <- row.names(counts_write)
 counts_write <- counts_write[,c('feature',
                                 colnames(counts_write)[!(colnames(counts_write) %in% 'feature')]
