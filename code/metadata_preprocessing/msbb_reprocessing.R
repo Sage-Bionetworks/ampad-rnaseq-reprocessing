@@ -306,7 +306,7 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Full_MSBB_RNASeq_Covariates.csv',
   name = 'MSBB Full Covariates',
   parentId=activity$properties$id ),
-  used = synids_used,
+  used = used_synids,
   activityName = activityName,
   executed = thisFile,
   activityDescription = activityDescription
@@ -326,7 +326,7 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Cleaned_MSBB_RNASeq_Covariates.csv',
   name = 'MSBB Cleaned Covariates',
   parentId=activity$properties$id ),
-  used = synids_used,
+  used = used_synids,
   activityName = activityName,
   executed = thisFile,
   activityDescription = activityDescription
@@ -345,9 +345,9 @@ write.csv(sageseqr_uncensored,
 
 ENRICH_OBJ <- synapser::synStore( synapser::File( 
   path='Sageseqr_MSBB_RNASeq_Uncensored_Covariates.csv',
-  name = 'MSBB Sageseqr Covariates',
+  name = 'MSBB  Ages Uncensored Sageseqr Input Covariates',
   parentId=activity$properties$id ),
-  used = synids_used,
+  used = used_synids,
   activityName = activityName,
   executed = thisFile,
   activityDescription = activityDescription
@@ -362,6 +362,15 @@ activity <- synapser::synGetEntity(sageseqrmeta_parentid)
 activityName = 'Sageseqr Input Metadata'
 activityDescription = 'Cleaned Codified and Recoded Metadata'
 
+
+children <- synapser::synGetChildren(activity$properties$id)$asList()
+cesoredmeta_used <- NULL
+for(i in 1:length(children)) {
+  if(children[[i]]$name == "MSBB  Ages Uncensored Sageseqr Input Covariates") {
+    cesoredmeta_used <- children[[i]]$id
+  }
+}
+
 write.csv(sageseqr_censored,
           file = 'Sageseqr_MSBB_RNASeq_Covariates_Censored.csv',
           row.names = F,
@@ -372,7 +381,7 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Sageseqr_MSBB_RNASeq_Covariates_Censored.csv',
   name = 'MSBB Ages Censored Sageseqr Input Covariates',
   parentId=activity$properties$id ),
-  used = synids_used,
+  used = cesoredmeta_used,
   activityName = activityName,
   executed = thisFile,
   activityDescription = activityDescription
