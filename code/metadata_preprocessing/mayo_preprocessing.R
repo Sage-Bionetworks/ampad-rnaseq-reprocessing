@@ -454,19 +454,3 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
 file.remove("MAYO_counts.txt")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
