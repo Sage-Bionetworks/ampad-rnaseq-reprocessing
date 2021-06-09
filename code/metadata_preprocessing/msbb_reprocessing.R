@@ -290,7 +290,7 @@ thisRepo <- githubr::getRepo(
 thisFile <- githubr::getPermlink(
   repository = thisRepo,
   repositoryPath=paste0('code/metadata_preprocessing/',
-                        'msbb_preprocessing.R'
+                        'msbb_reprocessing.R'
   )
 )
 
