@@ -367,6 +367,9 @@
   comb_uncensored$cts_mmse30_lv <-  ages_a[ comb_uncensored$projid,]$cts_mmse30_lv
   comb_uncensored$cts_mmse30_first_ad_dx <-  ages_a[ comb_uncensored$projid,]$cts_mmse30_first_ad_dx
 
+  comb_uncensored <- comb_uncensored[!is.na(comb_uncensored$apoe4_allele),]
+  comb <- comb[!is.na(comb$apoe4_allele),]
+  counts <- counts[,comb_uncensored$specimenID]
 ##############################################################################
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
 internal_parentid <- 'syn25784097'
