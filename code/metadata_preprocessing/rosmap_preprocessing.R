@@ -373,6 +373,9 @@
   comb <- comb[!is.na(comb$apoe4_allele),]
   comb_uncensored <- comb_uncensored[!is.na(comb_uncensored$pmi),]
   comb <- comb[!is.na(comb$pmi),]
+  comb_uncensored <- comb_uncensored[!is.na(comb_uncensored$RIN),]
+  comb <- comb[!is.na(comb$RIN),]
+  
   counts <- counts[,comb_uncensored$specimenID]
 ##############################################################################
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
