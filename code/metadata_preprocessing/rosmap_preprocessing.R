@@ -9,6 +9,8 @@
   library(digest)
   library(stringr)
   
+  
+  synapser::synLogin()
   # Track files for provenance
   synids_used <- NULL
   
@@ -369,6 +371,8 @@
 
   comb_uncensored <- comb_uncensored[!is.na(comb_uncensored$apoe4_allele),]
   comb <- comb[!is.na(comb$apoe4_allele),]
+  comb_uncensored <- comb_uncensored[!is.na(comb_uncensored$pmi),]
+  comb <- comb[!is.na(comb$pmi),]
   counts <- counts[,comb_uncensored$specimenID]
 ##############################################################################
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
