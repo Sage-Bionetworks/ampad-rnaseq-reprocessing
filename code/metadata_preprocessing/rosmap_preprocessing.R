@@ -495,6 +495,34 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   file.remove(paste0(tiss,'_Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv'))
 }
 
+
+# Indv Tissue Metadata for sage-seqr
+for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  activityDescription = 'Cleaned Codified and Recoded Ages Uncensored Metadata'
+  
+  write.csv(tiss_file,
+            file = paste0(tiss,
+                          'Rinover5_Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv'
+            ),
+            row.names = F,
+            quote = F
+  )
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path= paste0(tiss,'Rinover5_Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv'),
+    name = paste0(tiss, 'Rin over 5 RosMap Ages Uncensored Sageseqr Input Covariates'),
+    parentId='syn26242659' ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0(tiss,'Rinover5_Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv'))
+}
+
 ## Upload Sageseqr ages Censored file to synapse
 comb_censored_sageseqr <- comb[,colnames(comb_uncensored_sageseqr)]
 
@@ -586,6 +614,12 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
 file.remove("ROSMAP_counts.txt")
 
+anno_trans <- c('dorsolateral prefrontal cortex', 
+  'head of caudate nucleus', 
+  'posterior cingulate cortex'
+)
+names(anno_trans) <- c('DLPFC','ACC', 'PCC' )
+
 for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
   tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
@@ -594,8 +628,8 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   counts_used <- c('syn22283382', 'syn22301601', 'syn22314230')
   counts_parentid <- 'syn25808173'
   activity <- synapser::synGet(counts_parentid)
-  activityName = 'Sageseqr Input Counts'
-  activityDescription = 'Combined ROSMAP RNASeq Counts for input to SageSeqr'
+  activityName = paste0(tiss, ' Sageseqr Input Counts')
+  activityDescription = paste0( tiss, ' ROSMAP RNASeq Counts for input to SageSeqr')
   
   all.annotations.expression = list(
     dataType = 'geneExpression',
@@ -610,10 +644,7 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
     grant = 'U01AG046152',
     species = 'Human',
     organ = 'brain',
-    tissue = c('dorsolateral prefrontal cortex', 
-               'head of caudate nucleus', 
-               'posterior cingulate cortex'
-    ),
+    tissue = as.character(anno_trans[tiss]),
     study = c('ROSMAP','rnaSeqReprocessing'), 
     consortium = 'AMP-AD'
   )
@@ -647,6 +678,69 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
   file.remove(paste0(tiss, '_ROSMAP_counts.txt'))
+}
+
+
+
+for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss & 
+                                          comb_uncensored_sageseqr$RIN >= 5,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  
+  
+  counts_used <- c('syn22283382', 'syn22301601', 'syn22314230')
+  counts_parentid <- 'syn25808173'
+  activity <- synapser::synGet(counts_parentid)
+  activityName = paste0( tiss, ' Rin over 5 Sageseqr Input Counts')
+  activityDescription = paste0( tiss, ' Rin over 5 Combined ROSMAP RNASeq Counts for input to SageSeqr')
+  
+  all.annotations.expression = list(
+    dataType = 'geneExpression',
+    dataSubtype = 'processed',
+    resourceType = 'experimentalData',
+    assay = 'rnaSeq',
+    nucleicAcidSource = "bulk cell",
+    isModelSystem = 'FALSE',
+    isConsortiumAnalysis = 'TRUE',
+    isMultiSpecimen = 'TRUE',
+    fileFormat = 'txt',
+    grant = 'U01AG046152',
+    species = 'Human',
+    organ = 'brain',
+    tissue = as.character(anno_trans[tiss]),
+    study = c('ROSMAP','rnaSeqReprocessing'), 
+    consortium = 'AMP-AD'
+  )
+  
+  counts_write <- counts
+  counts_write <- counts_write[ ,comb_uncensored_sageseqr$specimenID ]
+  counts_write$feature <- row.names(counts_write)
+  
+  counts_write <- counts_write[,c('feature',
+                                  colnames(counts_write)[colnames(counts_write) %in% tiss_file$specimenID]
+  )
+  ]
+  
+  
+  write.table(counts_write,
+              file = paste0(tiss, '_Rinover5_ROSMAP_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path=paste0(tiss, '_Rinover5_ROSMAP_counts.txt'),
+    name = paste0(tiss,' Rin over 5 RosMap Sageseqr Input Counts'),
+    parentId='syn26242660'),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0(tiss, '_Rinover5_ROSMAP_counts.txt'))
 }
  
 
