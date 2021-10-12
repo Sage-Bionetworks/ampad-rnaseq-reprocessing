@@ -377,6 +377,34 @@
   comb <- comb[!is.na(comb$RIN),]
   
   counts <- counts[,comb_uncensored$specimenID]
+  
+exclude_samples_sex_swap <- c("327_120501", "Sample_R4361022-DLPFC", 
+"Sample_R2730285-DLPFC", "Sample_R8261694-DLPFC", "RISK_333")
+exclude_samples_outliers <- c('380_120503', 'RISK_197', 'RISK_278', 'RISK_282', 
+                              'RISK_283', 'RISK_295', 'RISK_300', 'RISK_303', 
+                              'RISK_305', 'RISK_310', 'RISK_314', 'RISK_63', 
+                              'RISK_121_redo', 'RISK_125_redo', 'RISK_171_redo',
+                              'RISK_218', 'RISK_243', 'RISK_254', 'RISK_260', 
+                              'RISK_269', 'RISK_280', 'RISK_418', 'RISK_81',
+                              'RISK_93', 'RISK_321')
+comb_uncensored <- comb_uncensored[ 
+  !(comb_uncensored$specimenID %in% 
+      c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
+]
+comb_uncensored_sageseqr <- comb_uncensored_sageseqr[ 
+  !(comb_uncensored_sageseqr$specimenID %in% 
+      c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
+]
+comb_censored_sageseqr <- comb_censored_sageseqr[ 
+  !(comb_censored_sageseqr$specimenID %in% 
+      c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
+]
+counts <- counts[, 
+                 colnames(counts)[
+                   !(colnames(counts) %in% 
+                     c(exclude_samples_sex_swap,exclude_samples_outliers)
+                   )]
+                 ]
 ##############################################################################
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
 internal_parentid <- 'syn25784097'
