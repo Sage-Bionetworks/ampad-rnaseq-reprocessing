@@ -395,10 +395,10 @@ comb_uncensored_sageseqr <- comb_uncensored_sageseqr[
   !(comb_uncensored_sageseqr$specimenID %in% 
       c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
 ]
-comb_censored_sageseqr <- comb_censored_sageseqr[ 
-  !(comb_censored_sageseqr$specimenID %in% 
-      c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
-]
+#comb_censored_sageseqr <- comb_censored_sageseqr[ 
+#  !(comb_censored_sageseqr$specimenID %in% 
+#      c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
+#]
 counts <- counts[, 
                  colnames(counts)[
                    !(colnames(counts) %in% 
