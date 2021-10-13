@@ -393,7 +393,13 @@ exclude_samples_outliers <- c('380_120503', 'RISK_197', 'RISK_278', 'RISK_282',
                                 'RISK_121_redo', 'RISK_125_redo', 'RISK_171_redo',
                                 'RISK_218', 'RISK_243', 'RISK_254', 'RISK_260', 
                                 'RISK_269', 'RISK_280', 'RISK_418', 'RISK_81',
-                                'RISK_93', 'RISK_321')
+                                'RISK_93', 'RISK_321', 'RISK_15', 'RISK_167', 
+                              'RISK_29', 'RISK_299', 'RISK_324', 'RISK_329', 
+                              'RISK_33', 'RISK_37', 'RISK_439', 'RISK_455', 
+                              'RISK_55', 'RISK_59', 'RISK_65', 'RISK_75', 
+                              'RISK_79', 'RISK_87', 'RISK_89', 'RISK_101',
+                              'RISK_131_redo', 'RISK_137_redo', 'RISK_208',
+                              'RISK_217', 'RISK_259', 'RISK_47', 'RISK_97')
   comb_uncensored <- comb_uncensored[ 
     !(comb_uncensored$specimenID %in% 
         c(exclude_samples_sex_swap,exclude_samples_outliers)) ,
