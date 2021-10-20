@@ -380,7 +380,7 @@ file.remove("Cleaned_Mayo_RNASeq_Covariates.csv")
 
 ## Upload Sageseqr file to synapse
 sageseqrmeta_parentid <- 'syn25808143'
-activity <- synapser::synGetEntity(sageseqrmeta_parentid)
+activity <- synapser::synGet(sageseqrmeta_parentid)
 activityName = 'Sageseqr Input Metadata'
 activityDescription = 'Cleaned Codified and Recoded Metadata'
 
