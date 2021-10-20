@@ -304,7 +304,7 @@ internal_parentid <- 'syn25832833'
 folder_loc <- 'syn25832834'
 
 #Set Activity
-activity <- synapser::synGetEntity(folder_loc)
+activity <- synapser::synGet(folder_loc)
 
 ##Set Annotations:
 all.annotations = list(
@@ -405,7 +405,7 @@ file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored.csv")
 ## Upload Sageseqr counts
 counts_used <- c('syn21544635')
 counts_parentid <- 'syn25808173'
-activity <- synapser::synGetEntity(counts_parentid)
+activity <- synapser::synGet(counts_parentid)
 activityName = 'Sageseqr Input Counts'
 activityDescription = 'Mayo RNASeq Counts for input to SageSeqr'
 
