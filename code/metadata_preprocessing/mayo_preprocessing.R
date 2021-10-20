@@ -286,7 +286,7 @@ total_metaata <- total_metaata[,c(
 
 # Un-mask Age Death for sageseqr input
 metadata_sageqr = metadata %>%
-  dplyr::mutate(age_death = gsub("+", "", age_death))
+  dplyr::mutate(age_death = gsub("[+]", "", age_death))
 
 metadata_sageqr <- metadata_sageqr[ ,
   c( 'specimenID', 'specimenIdSource', 'tissue', 'diagnosis',
