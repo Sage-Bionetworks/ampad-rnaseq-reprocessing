@@ -1,5 +1,5 @@
 ###### Mayo Meta Data Cleaning and Counts combining
-# Metadata and counts for sageseqr pipeline are assembled and 
+# Metadata and counts for sageseqr pipeline are assembled and
 # pushed to synapse
 library(readxl)
 library(synapser)
@@ -21,8 +21,8 @@ synids_used <- count
 count <- synapser::synGet(count)$path %>%
   read.table(header=T, sep='\t', check.names = F, row.names = 1)
 
-count <- count[ row.names(count)[ 
-  !(row.names(count) %in% 
+count <- count[ row.names(count)[
+  !(row.names(count) %in%
       c('N_unmapped','N_multimapping','N_noFeature','N_ambiguous')
   )
 ],]
@@ -31,7 +31,7 @@ count <- count[ row.names(count)[
 clinical_md <- 'syn23277389'
 synids_used = c(synids_used, clinical_md)
 clinical_md <- synGet(clinical_md)$path %>%
-  read.csv(header=T, stringsAsFactors=F) 
+  read.csv(header=T, stringsAsFactors=F)
 
 #Braak, CERAD, Apoe Geno Standard names
 colnames(clinical_md)[ colnames(clinical_md) == "Braak" ] <- 'braaksc'
@@ -49,7 +49,7 @@ clinical_md[clinical_md$apoe_genotype %in% c('44'),]$apoe4_allele <- 2
 #1=White
 #2=Black, Negro, African-American
 #3=Native American, Indian
-#4=Eskimo 
+#4=Eskimo
 #5=Aleut
 #6=Asian or Pacific Island
 #8=REFUSAL
@@ -58,11 +58,11 @@ clinical_md[ is.na(clinical_md$race),]$race <- 9
 clinical_md[ clinical_md$race %in% 'White',]$race <- 1
 
 #Code Diagnosis According to re-seq paper: 'AD', 'CT', 'OTHER'
-clinical_md[clinical_md$diagnosis %in% 'Alzheimer Disease',]$diagnosis <- 'AD' 
-clinical_md[clinical_md$diagnosis %in% 'control',]$diagnosis <- 'CT' 
+clinical_md[clinical_md$diagnosis %in% 'Alzheimer Disease',]$diagnosis <- 'AD'
+clinical_md[clinical_md$diagnosis %in% 'control',]$diagnosis <- 'CT'
 clinical_md[
   clinical_md$diagnosis %in% 'progressive supranuclear palsy',
-]$diagnosis <- 'PSP' 
+]$diagnosis <- 'PSP'
 clinical_md[
   clinical_md$diagnosis %in% 'pathological aging',
 ]$diagnosis <- 'PATH_AGE'
@@ -105,7 +105,7 @@ synids_used = c(synids_used, 'syn6126119', 'syn6126114')
 samples_exclude <- synapser::synGet(samples_exclude[1])$path %>%
   read.table(header=T, sep='\t') %>%
   rbind( read.table(
-    synapser::synGet(samples_exclude[2])$path, 
+    synapser::synGet(samples_exclude[2])$path,
     header=T,
     sep='\t'
   ))
@@ -116,7 +116,7 @@ samples_exclude$Sample.Name <- gsub('_CER', '_CBE', samples_exclude$Sample.Name)
 
 metadata = metadata %>%
   dplyr::filter(specimenID %in% colnames(count)) %>% # No Samples
-  dplyr::filter(!is.na(RIN)) %>% # 6 samples (4 missing age_death, all missing source) 
+  dplyr::filter(!is.na(RIN)) %>% # 6 samples (4 missing age_death, all missing source)
   dplyr::filter(!is.na(RnaSeqMetrics_PCT_INTRONIC_BASES)) %>% # No Samples
   dplyr::filter(!is.na(age_death)) %>% # 4 Samples
   dplyr::filter(!is.na(specimenIdSource)) %>% # 6 samples
@@ -184,7 +184,7 @@ sstot = sum((y.train-mean(y.train, na.rm = T))^2, na.rm = T)
 R2.allgenes = 1-(ssres/sstot)
 y.predict.all = predict(plr.model, t(x.predict), s = 'lambda.min', type = 'response') %>%
   CovariateAnalysis::rownameToFirstColumn('individualID') %>%
-  plyr::rename(c('1' = 'pmi'))
+  plyr::rename(c('lambda.min' = 'pmi'))
 
 # Get genes that are predictors of pmi and use them as control probes
 controlprobes_id = 'syn6145639'
@@ -195,7 +195,7 @@ controlprobes_id = fread(synGet(controlprobes_id)$path, data.table = F) %>%
 row.names(expr) <- do.call(rbind, strsplit(rownames(expr), '[.]'))[,1]
 
 # Initial normalisation of gene expression
-ind = rownames(expr) %in% controlprobes_id$ensembl_gene_id 
+ind = rownames(expr) %in% controlprobes_id$ensembl_gene_id
 expr = expr[ind,]
 # Fit a logistic regression model
 x.train = expr[,!is.na(pmi$pmi)]
@@ -209,14 +209,14 @@ sstot = sum((y.train-mean(y.train, na.rm = T))^2, na.rm = T)
 R2.smallgenes = 1-(ssres/sstot)
 y.predict = predict(plr.model, t(x.predict), s = 'lambda.min', type = 'response') %>%
   CovariateAnalysis::rownameToFirstColumn('individualID') %>%
-  plyr::rename(c('1' = 'pmi'))
-pmi = pmi %>% 
+  plyr::rename(c('lambda.min' = 'pmi'))
+pmi = pmi %>%
   dplyr::select(individualID, pmi) %>%
   dplyr::filter(!is.na(pmi)) %>%
   list(y.predict) %>%
   data.table::rbindlist(use.names = T, fill = T)
 pmi$pmi[pmi$pmi < 0] = 0
-metadata = metadata %>% 
+metadata = metadata %>%
   dplyr::select(-pmi) %>%
   dplyr::left_join(pmi)
 ################################################################################
@@ -244,7 +244,7 @@ for(name in colnames(metadata)){
 
 # Variables that are all NAs
 message('Variables that are all NAs:')
-message(paste0('Variables that are all NAs: ', 
+message(paste0('Variables that are all NAs: ',
                paste(remove_na,collapse = ', ')
 )
 )
@@ -265,7 +265,7 @@ metadata <- metadata[,
              colnames(metadata)[!(colnames(metadata) %in% c(remove_na,length_issue,all_zeros))]
 ]
 
-ordered_columns <- c("individualID", "specimenID", "specimenIdSource", "tissue",  
+ordered_columns <- c("individualID", "specimenID", "specimenIdSource", "tissue",
                      "exclude", "sex", "age_death",  "pmi", "diagnosis",
                      "braaksc", "thal", "apoe_genotype", "apoe4_allele",
                      "Tissue.APOE4", "RIN", "RIN2", "flowcell",
@@ -284,16 +284,16 @@ total_metaata <- total_metaata[,c(
   )
 ]
 
-# Un-mask Age Death for sageseqr input 
+# Un-mask Age Death for sageseqr input
 metadata_sageqr = metadata %>%
-  dplyr::mutate(age_death = gsub("_or_above", "", age_death))
+  dplyr::mutate(age_death = gsub("+", "", age_death))
 
-metadata_sageqr <- metadata_sageqr[ , 
-  c( 'specimenID',	'individualID', 'specimenIdSource', 'tissue', 'diagnosis',
-     'braaksc', 'thal',	'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN', 
-     'RIN2',	'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED', 
+metadata_sageqr <- metadata_sageqr[ ,
+  c( 'specimenID', 'specimenIdSource', 'tissue', 'diagnosis',
+     'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
+     'RIN2',	'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED',
      'RnaSeqMetrics_PCT_INTRONIC_BASES', 'RnaSeqMetrics_PCT_INTERGENIC_BASES',
-     'RnaSeqMetrics_PCT_CODING_BASES' 
+     'RnaSeqMetrics_PCT_CODING_BASES'
     )
 ]
 
@@ -317,10 +317,10 @@ all.annotations = list(
   grant = 'U01AG046152',
   species = 'Human',
   organ = 'brain',
-  tissue = c('temporal cortex', 
+  tissue = c('temporal cortex',
              'cerebellum'
   ),
-  study = c('MayoRNAseq','rnaSeqReprocessing'), 
+  study = c('MayoRNAseq','rnaSeqReprocessing'),
   consortium = 'AMP-AD',
   assay = 'rnaSeq'
 )
@@ -346,7 +346,7 @@ write.csv(total_metaata,
           row.names = F,
           quote = F
 )
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Full_Mayo_RNASeq_Covariates.csv',
   name = 'Mayo Full Covariates',
   parentId=activity$properties$id ),
@@ -366,7 +366,7 @@ write.csv(metadata,
           row.names = F,
           quote = F
 )
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Cleaned_Mayo_RNASeq_Covariates.csv',
   name = 'Mayo Cleaned Covariates',
   parentId=activity$properties$id ),
@@ -390,7 +390,7 @@ write.csv(metadata_sageqr,
           quote = F
 )
 
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Sageseqr_Mayo_RNASeq_Covariates_Censored.csv',
   name = 'Mayo Sageseqr Input Covariates',
   parentId=activity$properties$id ),
@@ -422,10 +422,10 @@ all.annotations.expression = list(
   grant = 'U01AG046152',
   species = 'Human',
   organ = 'brain',
-  tissue = c('temporal cortex', 
+  tissue = c('temporal cortex',
              'cerebellum'
   ),
-  study = c('MayoRNAseq','rnaSeqReprocessing'), 
+  study = c('MayoRNAseq','rnaSeqReprocessing'),
   consortium = 'AMP-AD'
 )
 
@@ -443,7 +443,7 @@ write.table(counts_write,
             sep = '\t'
 )
 
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='MAYO_counts.txt',
   name = 'MAYO Sageseqr Input Counts',
   parentId=activity$properties$id ),
