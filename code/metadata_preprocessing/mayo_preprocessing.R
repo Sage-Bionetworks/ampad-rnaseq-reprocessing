@@ -289,7 +289,7 @@ metadata_sageqr = metadata %>%
   dplyr::mutate(age_death = gsub("[+]", "", age_death))
 
 metadata_sageqr <- metadata_sageqr[ ,
-  c( 'specimenID', 'specimenIdSource', 'tissue', 'diagnosis',
+  c( 'specimenID', 'tissue', 'diagnosis',
      'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
      'RIN2',	'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED',
      'RnaSeqMetrics_PCT_INTRONIC_BASES', 'RnaSeqMetrics_PCT_INTERGENIC_BASES',
