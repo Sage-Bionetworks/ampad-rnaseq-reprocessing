@@ -503,6 +503,4 @@ for( tis in c('TCX','CBE')){
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
   file.remove(paste0('MAYO_', tis,'_counts.txt'))
-
-
 }
