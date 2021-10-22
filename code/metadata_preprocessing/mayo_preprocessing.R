@@ -402,6 +402,28 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored.csv")
 
+# write the independent tissue metadata files
+for( tis in c('TCX','CBE')){
+
+  write.csv(metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,],
+            file = paste0('Sageseqr_Mayo_', tis,'_RNASeq_Covariates_Censored.csv'),
+            row.names = F,
+            quote = F
+  )
+
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_Mayo_', tis,'_RNASeq_Covariates_Censored.csv'),
+    name = paste0('Mayo ', tis,' Sageseqr Input Covariates'),
+    parentId=activity$properties$id ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0("Sageseqr_Mayo_", tis,"_RNASeq_Covariates_Censored.csv"))
+
+}
 ## Upload Sageseqr counts
 counts_used <- c('syn21544635')
 counts_parentid <- 'syn25808173'
@@ -454,3 +476,33 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
 file.remove("MAYO_counts.txt")
+
+
+for( tis in c('TCX','CBE')){
+
+  keeps <- c('feature', as.character(
+    metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]$specimenID
+  ))
+
+  write.table(counts_write[,keeps],
+              file = paste0('MAYO_', tis,'_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MAYO_', tis,'_counts.txt'),
+    name = paste0('MAYO ', tis, ' Sageseqr Input Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MAYO_', tis,'_counts.txt'))
+
+
+}
