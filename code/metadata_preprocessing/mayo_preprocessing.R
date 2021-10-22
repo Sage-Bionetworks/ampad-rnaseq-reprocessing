@@ -404,8 +404,8 @@ file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored.csv")
 
 # write the independent tissue metadata files
 for( tis in c('TCX','CBE')){
-
-  write.csv(metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,],
+  meta_write <- metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]
+  write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% tis)]],
             file = paste0('Sageseqr_Mayo_', tis,'_RNASeq_Covariates_Censored.csv'),
             row.names = F,
             quote = F
