@@ -294,9 +294,10 @@ metadata_sageqr = metadata %>%
   dplyr::mutate(age_death = gsub("[+]", "", age_death))
 
 metadata_sageqr <- metadata_sageqr[
-  !(metadata_sageqr$individualID %in% indToRemove),
+  !(metadata_sageqr$specimenID %in% indToRemove),
 ]
 
+count <- count[, !(colnames(count) %in% indToRemove)]
 metadata_sageqr <- metadata_sageqr[ ,
   c( 'specimenID', 'tissue', 'diagnosis',
      'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
