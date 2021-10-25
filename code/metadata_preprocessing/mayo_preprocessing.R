@@ -283,10 +283,19 @@ total_metaata <- total_metaata[,c(
     colnames(total_metaata)[!(colnames(total_metaata) %in% ordered_columns)]
   )
 ]
-
+# flowcell
 # Un-mask Age Death for sageseqr input
+
+#Remove Outliers:
+indToRemove = c("11311_CER", "1923_CER", "1923_TCX", "11396_TCX", "11294_TCX", "11408_TCX",
+                '1950_TCX', '1950_CER', '1925_TCX', '1957_CER')
+
 metadata_sageqr = metadata %>%
   dplyr::mutate(age_death = gsub("[+]", "", age_death))
+
+metadata_sageqr <- metadata_sageqr[
+  !(metadata_sageqr$individualID %in% indToRemove),
+]
 
 metadata_sageqr <- metadata_sageqr[ ,
   c( 'specimenID', 'tissue', 'diagnosis',
