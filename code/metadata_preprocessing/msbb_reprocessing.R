@@ -266,7 +266,7 @@ internal_parentid <- 'syn25872211'
 folder_loc <- 'syn25872212'
 
 #Set Activity
-activity <- synapser::synGetEntity(folder_loc)
+activity <- synapser::synGet(folder_loc)
 
 ##Set Annotations:
 all.annotations = list(
@@ -366,7 +366,7 @@ file.remove("Sageseqr_MSBB_RNASeq_Uncensored_Covariates.csv")
 
 ## Upload Sageseqr file to synapse
 sageseqrmeta_parentid <- 'syn25808143'
-activity <- synapser::synGetEntity(sageseqrmeta_parentid)
+activity <- synapser::synGet(sageseqrmeta_parentid)
 activityName = 'Sageseqr Input Metadata'
 activityDescription = 'Cleaned Codified and Recoded Metadata'
 
@@ -426,7 +426,7 @@ for( tis in names(table(sageseqr_censored$tissue))){
 ## Upload Sageseqr counts
 counts_used <- c('syn21544664')
 counts_parentid <- 'syn25808173'
-activity <- synapser::synGetEntity(counts_parentid)
+activity <- synapser::synGet(counts_parentid)
 activityName = 'Sageseqr Input Counts'
 activityDescription = 'MSBB RNASeq Counts for input to SageSeqr'
 
