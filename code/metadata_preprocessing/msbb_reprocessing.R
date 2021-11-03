@@ -420,9 +420,6 @@ for( tis in names(table(sageseqr_censored$tissue))){
 
 }
 
-
-
-
 ## Upload Sageseqr counts
 counts_used <- c('syn21544664')
 counts_parentid <- 'syn25808173'
@@ -478,6 +475,30 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
 file.remove("MSBB_counts.txt")
 
+for( tis in names(table(sageseqr_censored$tissue))){
+  meta_write <- sageseqr_censored[as.character(sageseqr_censored$tissue) == tis,]
+  counts_write <- counts_write[,c('feature',
+                                  colnames(counts_write)[(colnames(counts_write) %in% meta_write$specimenID)]
+  )
+  ]
+  write.table(counts_write,
+              file = paste0('MSBB_', tis, '_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
 
-
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MSBB_', tis, '_counts.txt'),
+    name = paste0('MSBB ', tis, ' Sageseqr Input Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MSBB_', tis, '_counts.txt'))
+}
 
