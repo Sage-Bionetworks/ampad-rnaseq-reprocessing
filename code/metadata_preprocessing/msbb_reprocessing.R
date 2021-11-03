@@ -132,12 +132,22 @@ clinical[ clinical$apoeGenotype %in% c(44),]$apoe4_allele <- 2
 clinical$pmi <- clinical$pmi/60
 
 # Get biospecimin metadata
+region_aide <- read.csv(synapser::synGet('syn6100548')$path, header = T)
+region_aide <- region_aide[ region_aide$fileType == 'bam',]
+row.names(region_aide) <- region_aide$sampleIdentifier
+
 biospecimin <- 'syn21893059'
-used_synids <- c(used_synids,biospecimin)
+used_synids <- c(used_synids,biospecimin,'syn6100548')
 biospecimin <- synGet(biospecimin)$path %>%
   read.csv(header = T, stringsAsFactors = F)
 biospecimin <- biospecimin[ biospecimin$assay=='rnaSeq',]
 biospecimin<-biospecimin[biospecimin$specimenID %in% colnames(counts),]
+
+biospecimin[ biospecimin$specimenID %in% row.names(region_aide),]$BrodmannArea <-
+  as.numeric(
+    gsub('BM','',region_aide[ biospecimin[ biospecimin$specimenID %in% row.names(region_aide),]$specimenID,]$BrodmannArea)
+  )
+
 biospecimin$tissue[biospecimin$tissue=='superior temporal gyrus'] <- 'STG'
 biospecimin$tissue[biospecimin$tissue=='frontal pole'] <- 'FP'
 biospecimin$tissue[biospecimin$tissue=='inferior frontal gyrus'] <- 'IFG'
@@ -401,6 +411,8 @@ file.remove("Sageseqr_MSBB_RNASeq_Covariates_Censored.csv")
 for( tis in names(table(sageseqr_censored$tissue))){
 
   meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
+  meta_write <- meta_write[ !is.na(meta_write$tissue),]
+
   write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
             file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'),
             row.names = F,
