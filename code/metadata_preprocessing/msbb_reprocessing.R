@@ -399,7 +399,8 @@ file.remove("Sageseqr_MSBB_RNASeq_Covariates_Censored.csv")
 
 #Store Tissue Specific Files:
 for( tis in names(table(sageseqr_censored$tissue))){
-  meta_write <- sageseqr_censored[as.character(sageseqr_censored$tissue) == tis,]
+
+  meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
   write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
             file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'),
             row.names = F,
