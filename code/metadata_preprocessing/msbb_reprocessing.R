@@ -258,7 +258,7 @@ sageseqr_uncensored <- sageseqr_uncensored[,
                                                  c('braaksc', 'CDR', 'plaqueMean', 'ceradsc', 'apoeGenotype',
                                                    'Tissue.APOE4','individualID', 'BrodmannArea','barcode'))
                                            ]]
-
+sageseqr_uncensored <- sageseqr_uncensored[ !is.na(sageseqr_uncensored$tissue), ]
 ################################################################################
 ## --   Push to Synapse   --  ##
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
@@ -378,7 +378,7 @@ for(i in 1:length(children)) {
     cesoredmeta_used <- children[[i]]$id
   }
 }
-
+sageseqr_censored <- sageseqr_censored[!is.na(sageseqr_censored$individualID), ]
 write.csv(sageseqr_censored,
           file = 'Sageseqr_MSBB_RNASeq_Covariates_Censored.csv',
           row.names = F,
@@ -476,12 +476,12 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression
 file.remove("MSBB_counts.txt")
 
 for( tis in names(table(sageseqr_censored$tissue))){
-  meta_write <- sageseqr_censored[as.character(sageseqr_censored$tissue) == tis,]
-  counts_write <- counts_write[,c('feature',
+  meta_write <- sageseqr_censored[as.character(sageseqr_uncensored$tissue) == tis,]
+  counts_wr <- counts_write[,c('feature',
                                   colnames(counts_write)[(colnames(counts_write) %in% meta_write$specimenID)]
   )
   ]
-  write.table(counts_write,
+  write.table(counts_wr,
               file = paste0('MSBB_', tis, '_counts.txt'),
               row.names = F,
               col.names = T,
