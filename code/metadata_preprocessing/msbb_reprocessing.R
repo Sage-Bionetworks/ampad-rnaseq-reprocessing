@@ -1,5 +1,5 @@
 ###### MSBB Meta Data Cleaning and Counts combining
-# Metadata and counts for sageseqr pipeline are assembled and 
+# Metadata and counts for sageseqr pipeline are assembled and
 # pushed to synapse
 library(readxl)
 library(synapser)
@@ -14,8 +14,8 @@ used_synids <- counts
 counts <- synapser::synGet(counts)$path %>%
   read.table(header=T, sep='\t', check.names = F, row.names = 1)
 
-counts <- counts[ row.names(counts)[ 
-  !(row.names(counts) %in% 
+counts <- counts[ row.names(counts)[
+  !(row.names(counts) %in%
       c('N_unmapped','N_multimapping','N_noFeature','N_ambiguous')
   )
 ],]
@@ -34,7 +34,7 @@ colnames(counts)[colnames(counts) == 'hB_RNA_10892'] <-
 
 # Get sample ids
 # SampleID = data.frame(SampleID = colnames(counts),
-#                       ID = colnames(counts)) %>% 
+#                       ID = colnames(counts)) %>%
 #   tidyr::separate(ID, c('A','B','ID'), sep = '_') %>%
 #   dplyr::select(SampleID, ID) %>%
 #   dplyr::mutate(ID = as.numeric(ID))
@@ -88,7 +88,7 @@ clinical <- clinical[,colnames(clinical)[!(colnames(clinical) %in% 'CERAD')]]
 #1=White
 #2=Black, Negro, African-American
 #3=Native American, Indian
-#4=Eskimo 
+#4=Eskimo
 #5=Aleut
 #6=Asian or Pacific Island
 #8=REFUSAL
@@ -160,7 +160,7 @@ assay<-assay[assay$specimenID %in% colnames(counts),]
 #Merge the metadata frames
 metrics <- metrics[metrics$specimenID %in% biospecimin$specimenID,]
 comb <- dplyr::right_join(biospecimin,
-                          assay[assay$specimenID %in% biospecimin$specimenID,], 
+                          assay[assay$specimenID %in% biospecimin$specimenID,],
                           by = 'specimenID') %>%
   dplyr::right_join(clinical, by ='individualID') %>%
   dplyr::right_join(metrics, by = 'specimenID')
@@ -192,7 +192,7 @@ for(name in colnames(comb)){
 
 # Variables that are all NAs
 message('Variables that are all NAs:')
-message(paste0('Variables that are all NAs: ', 
+message(paste0('Variables that are all NAs: ',
                paste(remove_na,collapse = ', ')
 )
 )
@@ -211,36 +211,36 @@ message(paste0('Variables that are all the same value: ',
 toss <- c(remove_na,length_issue,all_zeros)
 toss <- toss[!duplicated(toss)]
 keeps <- colnames(comb)[ !(colnames(comb) %in% toss)]
-keeps_AsmRsm <- keeps[ 
-  grepl('AlignmentSummaryMetrics_',keeps) | 
+keeps_AsmRsm <- keeps[
+  grepl('AlignmentSummaryMetrics_',keeps) |
   grepl('RnaSeqMetrics_',keeps) ]
 keeps <- keeps[!(keeps %in% keeps_AsmRsm)]
 
 colnames(comb)[ colnames(comb) == 'ageDeath'] <- 'age_death'
 
-total_metadata <- comb[ , c("specimenID", "individualID", "tissue", 
-                            "BrodmannArea", "sex", "race","spanish", 
-                            "ethnicity", "age_death", "braaksc", "CDR", 
-                            "plaqueMean", "ceradsc", "diagnosis", "RIN", "RIN2", 
-                            "sequencingBatch", "barcode",  "pmi", "apoeGenotype", 
+total_metadata <- comb[ , c("specimenID", "individualID", "tissue",
+                            "BrodmannArea", "sex", "race","spanish",
+                            "ethnicity", "age_death", "braaksc", "CDR",
+                            "plaqueMean", "ceradsc", "diagnosis", "RIN", "RIN2",
+                            "sequencingBatch", "barcode",  "pmi", "apoeGenotype",
                             "apoe4_allele", "Tissue.APOE4", keeps_AsmRsm,toss)]
-metadata <- comb[ , c("specimenID", "individualID", "tissue", 
-                      "BrodmannArea", "sex", "race","spanish", 
-                      "ethnicity", "age_death", "braaksc", "CDR", 
-                      "plaqueMean", "ceradsc", "RIN", "RIN2", "diagnosis", 
-                      "sequencingBatch", "barcode",  "pmi", "apoeGenotype", 
-                      "apoe4_allele", "Tissue.APOE4", keeps_AsmRsm)] 
+metadata <- comb[ , c("specimenID", "individualID", "tissue",
+                      "BrodmannArea", "sex", "race","spanish",
+                      "ethnicity", "age_death", "braaksc", "CDR",
+                      "plaqueMean", "ceradsc", "RIN", "RIN2", "diagnosis",
+                      "sequencingBatch", "barcode",  "pmi", "apoeGenotype",
+                      "apoe4_allele", "Tissue.APOE4", keeps_AsmRsm)]
 
-sageseqr_censored <- comb[ , c("specimenID", "individualID", "tissue", 
-                               "BrodmannArea", "sex", "race","spanish", 
-                               "ethnicity", "age_death", "braaksc", "CDR", 
+sageseqr_censored <- comb[ , c("specimenID", "individualID", "tissue",
+                               "BrodmannArea", "sex", "race","spanish",
+                               "ethnicity", "age_death", "braaksc", "CDR",
                                "plaqueMean", "ceradsc", "RIN", "RIN2", "diagnosis",
-                               "sequencingBatch", "barcode",  "pmi", "apoeGenotype", 
-                               "apoe4_allele", "Tissue.APOE4", 
+                               "sequencingBatch", "barcode",  "pmi", "apoeGenotype",
+                               "apoe4_allele", "Tissue.APOE4",
                                'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED',
                                'RnaSeqMetrics_PCT_INTRONIC_BASES',
                                'RnaSeqMetrics_PCT_INTERGENIC_BASES',
-                               'RnaSeqMetrics_PCT_CODING_BASES')] 
+                               'RnaSeqMetrics_PCT_CODING_BASES')]
 
 row.names(metadata_age) <- metadata_age$individualIdentifier
 sageseqr_uncensored <- sageseqr_censored
@@ -250,6 +250,14 @@ metadata$age_death <- metadata_age[metadata$individualID,]$AOD
 total_metadata$age_death <- metadata_age[total_metadata$individualID,]$AOD
 
 counts <- counts[,total_metadata$specimenID]
+
+
+sageseqr_uncensored <- sageseqr_uncensored[,
+                                           colnames(sageseqr_uncensored)[
+                                             !(colnames(sageseqr_uncensored) %in%
+                                                 c('braaksc', 'CDR', 'plaqueMean', 'ceradsc', 'apoeGenotype',
+                                                   'Tissue.APOE4','individualID', 'BrodmannArea','barcode'))
+                                           ]]
 
 ################################################################################
 ## --   Push to Synapse   --  ##
@@ -276,7 +284,7 @@ all.annotations = list(
                'parahippocampal gyrus',
                'superior temporal gyrus'
   ),
-  study = c('MSBB','rnaSeqReprocessing'), 
+  study = c('MSBB','rnaSeqReprocessing'),
   consortium = 'AMP-AD',
   assay = 'rnaSeq'
 )
@@ -302,7 +310,7 @@ write.csv(total_metadata,
           row.names = F,
           quote = F
 )
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Full_MSBB_RNASeq_Covariates.csv',
   name = 'MSBB Full Covariates',
   parentId=activity$properties$id ),
@@ -322,7 +330,7 @@ write.csv(metadata,
           row.names = F,
           quote = F
 )
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Cleaned_MSBB_RNASeq_Covariates.csv',
   name = 'MSBB Cleaned Covariates',
   parentId=activity$properties$id ),
@@ -343,7 +351,7 @@ write.csv(sageseqr_uncensored,
           quote = F
 )
 
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Sageseqr_MSBB_RNASeq_Uncensored_Covariates.csv',
   name = 'MSBB  Ages Uncensored Sageseqr Input Covariates',
   parentId=activity$properties$id ),
@@ -377,7 +385,7 @@ write.csv(sageseqr_censored,
           quote = F
 )
 
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='Sageseqr_MSBB_RNASeq_Covariates_Censored.csv',
   name = 'MSBB Ages Censored Sageseqr Input Covariates',
   parentId=activity$properties$id ),
@@ -388,6 +396,32 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_MSBB_RNASeq_Covariates_Censored.csv")
+
+#Store Tissue Specific Files:
+for( tis in names(table(sageseqr_censored$tissue))){
+  meta_write <- sageseqr_censored[as.character(sageseqr_censored$tissue) == tis,]
+  write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
+            file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'),
+    name = paste0('MSBB ', tis,' Sageseqr Input Covariates'),
+    parentId=activity$properties$id ),
+    used = used_synids,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'))
+
+}
+
+
+
 
 ## Upload Sageseqr counts
 counts_used <- c('syn21544664')
@@ -414,7 +448,7 @@ all.annotations.expression = list(
              'parahippocampal gyrus',
              'superior temporal gyrus'
   ),
-  study = c('MSBB','rnaSeqReprocessing'), 
+  study = c('MSBB','rnaSeqReprocessing'),
   consortium = 'AMP-AD'
 )
 
@@ -432,7 +466,7 @@ write.table(counts_write,
             sep = '\t'
 )
 
-ENRICH_OBJ <- synapser::synStore( synapser::File( 
+ENRICH_OBJ <- synapser::synStore( synapser::File(
   path='MSBB_counts.txt',
   name = 'MSBB Sageseqr Input Counts',
   parentId=activity$properties$id ),
