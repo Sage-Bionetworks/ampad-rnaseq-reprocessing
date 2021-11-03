@@ -148,10 +148,10 @@ biospecimin[ biospecimin$specimenID %in% row.names(region_aide),]$BrodmannArea <
     gsub('BM','',region_aide[ biospecimin[ biospecimin$specimenID %in% row.names(region_aide),]$specimenID,]$BrodmannArea)
   )
 
-biospecimin$tissue[biospecimin$tissue=='superior temporal gyrus'] <- 'STG'
-biospecimin$tissue[biospecimin$tissue=='frontal pole'] <- 'FP'
-biospecimin$tissue[biospecimin$tissue=='inferior frontal gyrus'] <- 'IFG'
-biospecimin$tissue[biospecimin$tissue=='parahippocampal gyrus'] <- 'PHG'
+biospecimin$tissue[biospecimin$BrodmannArea==22] <- 'STG'
+biospecimin$tissue[biospecimin$BrodmannArea==10] <- 'FP'
+biospecimin$tissue[biospecimin$BrodmannArea==44] <- 'IFG'
+biospecimin$tissue[biospecimin$BrodmannArea==36] <- 'PHG'
 
 #Toss sample swaps
 biospecimin <- biospecimin[ biospecimin$exclude == 'false',]
