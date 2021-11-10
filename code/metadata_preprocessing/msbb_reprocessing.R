@@ -500,7 +500,7 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression
 file.remove("MSBB_counts.txt")
 
 for( tis in names(table(sageseqr_censored$tissue))){
-  meta_write <- sageseqr_censored[as.character(sageseqr_uncensored$tissue) == tis,]
+  meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
   meta_write <- meta_write[complete.cases(meta_write),]
 
   counts_wr <- counts_write[,c('feature',
