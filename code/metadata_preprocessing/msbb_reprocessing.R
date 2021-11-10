@@ -122,11 +122,21 @@ clinical[ clinical$braaksc <= 3 &
             clinical$CDR <= 0.5  , ]$diagnosis <- 'CT'
 
 # apoe Allele:
-clinical$apoe4_allele <- NA
-clinical[ clinical$apoeGenotype %in% c(22,23,33),]$apoe4_allele <- 0
-clinical[ clinical$apoeGenotype %in% c(24,34),]$apoe4_allele <- 1
-clinical[ clinical$apoeGenotype %in% c(44),]$apoe4_allele <- 2
+used_synids <- c(used_synids,biospecimin,'syn26452711')
 
+apoe_fix <- read.csv(synapser::synGet('syn26452711')$path)
+row.names(apoe_fix) <- apoe_fix$individualID
+apoe_fix <- apoe_fix[apoe_fix$Exclude == FALSE,]
+clinical$apoe4_allele <- NA
+apoe_fix$final_apoe <- NA
+apoe_fix$final_apoe <- apoe_fix$WGS_e4_dosage
+apoe_fix[is.na(apoe_fix$WGS_e4_dosage),]$final_apoe <- apoe_fix[is.na(apoe_fix$WGS_e4_dosage),]$WES_e4_dosage
+
+for( i in 1:dim(clinical)[1]){
+  if(clinical[i,]$individualID %in% row.names(apoe_fix) ){
+    clinical[i,]$apoe4_allele <- apoe_fix[clinical[i,]$individualID,]$final_apoe
+  }
+}
 
 # conver pmi time interval from minutes to hours
 clinical$pmi <- clinical$pmi/60
@@ -154,7 +164,7 @@ biospecimin$tissue[biospecimin$BrodmannArea==44] <- 'IFG'
 biospecimin$tissue[biospecimin$BrodmannArea==36] <- 'PHG'
 
 #Toss sample swaps
-biospecimin <- biospecimin[ biospecimin$exclude == 'false',]
+biospecimin <- biospecimin[ biospecimin$exclude == 'FALSE',]
 counts <- counts[,biospecimin$specimenID]
 clinical <- clinical[ clinical$individualID %in% biospecimin$individualID, ]
 
@@ -269,6 +279,7 @@ sageseqr_uncensored <- sageseqr_uncensored[,
                                                    'Tissue.APOE4','individualID', 'BrodmannArea','barcode'))
                                            ]]
 sageseqr_uncensored <- sageseqr_uncensored[ !is.na(sageseqr_uncensored$tissue), ]
+
 ################################################################################
 ## --   Push to Synapse   --  ##
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
@@ -412,7 +423,7 @@ for( tis in names(table(sageseqr_censored$tissue))){
 
   meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
   meta_write <- meta_write[ !is.na(meta_write$tissue),]
-
+  meta_write <- meta_write[complete.cases(meta_write),]
   write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
             file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'),
             row.names = F,
@@ -490,6 +501,8 @@ file.remove("MSBB_counts.txt")
 
 for( tis in names(table(sageseqr_censored$tissue))){
   meta_write <- sageseqr_censored[as.character(sageseqr_uncensored$tissue) == tis,]
+  meta_write <- meta_write[complete.cases(meta_write),]
+
   counts_wr <- counts_write[,c('feature',
                                   colnames(counts_write)[(colnames(counts_write) %in% meta_write$specimenID)]
   )
