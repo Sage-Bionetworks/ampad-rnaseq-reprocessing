@@ -280,6 +280,12 @@ sageseqr_uncensored <- sageseqr_uncensored[,
                                            ]]
 sageseqr_uncensored <- sageseqr_uncensored[ !is.na(sageseqr_uncensored$tissue), ]
 
+sex_swapped <- c( 'hB_RNA_12901', 'hB_RNA_12934', 'BM_36_296', 'hB_RNA_10622',
+                  'hB_RNA_10622_L43C014', 'hB_RNA_10702', 'hB_RNA_10702_E007C014', 'hB_RNA_7765', 'hB_RNA_7765_resequenced',
+                  'hB_RNA_7995', 'hB_RNA_8015', 'hB_RNA_8025', 'hB_RNA_8025_E007C014', 'hB_RNA_8385', 'hB_RNA_8305')
+expression_outliers <- c('hB_RNA_10577', 'hB_RNA_12964', 'hB_RNA_13144', 'hB_RNA_13397', 'hB_RNA_10567', 'hB_RNA_10577', 'hB_RNA_7855', 'hB_RNA_9005')
+total_toss <- c(sex_swapped,expression_outliers)
+
 ################################################################################
 ## --   Push to Synapse   --  ##
 #Upload full file and SageSeqr input version to synapse - internal Sage Location:
@@ -422,6 +428,7 @@ file.remove("Sageseqr_MSBB_RNASeq_Covariates_Censored.csv")
 for( tis in names(table(sageseqr_censored$tissue))){
 
   meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
+  meta_write <- meta_write[ !(as.character(meta_write$specimenID) %in% total_toss), ]
   meta_write <- meta_write[ !is.na(meta_write$tissue),]
   meta_write <- meta_write[complete.cases(meta_write),]
   write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
@@ -502,7 +509,7 @@ file.remove("MSBB_counts.txt")
 for( tis in names(table(sageseqr_censored$tissue))){
   meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
   meta_write <- meta_write[complete.cases(meta_write),]
-
+  meta_write <- meta_write[ !(as.character(meta_write$specimenID) %in% total_toss), ]
   counts_wr <- counts_write[,c('feature',
                                   colnames(counts_write)[(colnames(counts_write) %in% meta_write$specimenID)]
   )
