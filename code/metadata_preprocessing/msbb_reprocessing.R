@@ -284,7 +284,44 @@ sex_swapped <- c( 'hB_RNA_12901', 'hB_RNA_12934', 'BM_36_296', 'hB_RNA_10622',
                   'hB_RNA_10622_L43C014', 'hB_RNA_10702', 'hB_RNA_10702_E007C014', 'hB_RNA_7765', 'hB_RNA_7765_resequenced',
                   'hB_RNA_7995', 'hB_RNA_8015', 'hB_RNA_8025', 'hB_RNA_8025_E007C014', 'hB_RNA_8385', 'hB_RNA_8305')
 expression_outliers <- c('hB_RNA_10577', 'hB_RNA_12964', 'hB_RNA_13144', 'hB_RNA_13397', 'hB_RNA_10567', 'hB_RNA_10577', 'hB_RNA_7855', 'hB_RNA_9005')
-total_toss <- c(sex_swapped,expression_outliers)
+# Tossed lower RIN, when tied tossed lower AlignmentSummaryMetrics_PF_READS_ALIGNED
+resequenced_tossed <- c( 
+  "BM_22_178", "BM_22_270", "hB_RNA_7755", "hB_RNA_7995", "hB_RNA_7765_resequenced", "hB_RNA_8025", 
+  "hB_RNA_8025_E007C014", "BM_22_254", "hB_RNA_9139", "hB_RNA_9144", "hB_RNA_9147", "BM_22_11", 
+  "hB_RNA_9183", "hB_RNA_9186", "hB_RNA_9191", "hB_RNA_9191_L43C014", "BM_22_84", "BM_22_251", 
+  "hB_RNA_9222", "BM_22_31", "hB_RNA_10232", "hB_RNA_10242", "hB_RNA_10252", "hB_RNA_12171", 
+  "hB_RNA_12181", "hB_RNA_12191", "hB_RNA_12201", "hB_RNA_12211", "hB_RNA_8075_resequenced",
+  "hB_RNA_8085_resequenced", "hB_RNA_8115_resequenced", "hB_RNA_8175_resequenced", "hB_RNA_8265",
+  "hB_RNA_8265_resequenced", "hB_RNA_8285", "hB_RNA_8295", "hB_RNA_9207_resequenced", "hB_RNA_9210_resequenced",
+  "hB_RNA_9212_resequenced", "hB_RNA_8125_resequenced", "hB_RNA_8155_resequenced", "hB_RNA_8215_resequenced",
+  "hB_RNA_9209_resequenced", "hB_RNA_10342", "hB_RNA_10302", "hB_RNA_8055", "hB_RNA_8185", "hB_RNA_8225_L43C014",
+  "hB_RNA_9115_B82C014", "hB_RNA_9166_L43C014", "hB_RNA_9178", "hB_RNA_9180_L43C014", "hB_RNA_9187_L43C014",
+  "hB_RNA_9189_E007C014", "hB_RNA_9208", "hB_RNA_12252", "hB_RNA_12252_resequenced", "hB_RNA_12262", 
+  "hB_RNA_12262_resequenced", "BM_36_360", "hB_RNA_12272", "hB_RNA_12282", "hB_RNA_12282_resequenced", 
+  "hB_RNA_12292", "hB_RNA_12292_resequenced", "hB_RNA_12312", "hB_RNA_12312_resequenced", "hB_RNA_12322",
+  "hB_RNA_12322_resequenced", "hB_RNA_12332", "hB_RNA_12332_B18C014", "hB_RNA_12342", "hB_RNA_12342_resequenced",
+  "hB_RNA_12352", "hB_RNA_12352_resequenced", "hB_RNA_12362", "hB_RNA_12372", "hB_RNA_12372_resequenced", "BM_36_407",
+  "hB_RNA_12382_resequenced", "hB_RNA_12392", "hB_RNA_12402", "hB_RNA_9085", "hB_RNA_9105", "hB_RNA_10482_resequenced",
+  "hB_RNA_10492_resequenced", "hB_RNA_10522_resequenced", "hB_RNA_10532", "hB_RNA_10542_resequenced", "hB_RNA_10552",
+  "hB_RNA_10567", "hB_RNA_10577", "hB_RNA_10583", "hB_RNA_10617", "hB_RNA_10632", "hB_RNA_10642", "hB_RNA_10652", 
+  "hB_RNA_10662", "hB_RNA_10672", "hB_RNA_10682", "hB_RNA_10692", "hB_RNA_10712_resequenced", 
+  "hB_RNA_10722_resequenced", "hB_RNA_10742_resequenced", "hB_RNA_10762_resequenced", "hB_RNA_10822",
+  "hB_RNA_10832", "hB_RNA_10842", "hB_RNA_10852", "hB_RNA_10862", "hB_RNA_10872", "hB_RNA_10882",  
+  "hB_RNA_10502_resequenced", "hB_RNA_10802_resequenced", "hB_RNA_10512_L43C014", "hB_RNA_10622", 
+  "hB_RNA_10702", "hB_RNA_10782", "hB_RNA_10992", "hB_RNA_11002", "hB_RNA_12302_E007C014", 
+  "hB_RNA_5041", "hB_RNA_16245_E008C189", "hB_RNA_16715_E009C189", "hB_RNA_16735_E009C189",
+  "hB_RNA_16895_E009C189", "hB_RNA_16905_E009C189", "hB_RNA_16965_E009C189",  "hB_RNA_17125_E009C189",
+  "hB_RNA_4398_E007C014", "hB_RNA_4631_E007C014", "hB_RNA_4720", "hB_RNA_4751_L43C014", "hB_RNA_4774",
+  "hB_RNA_4791", "hB_RNA_4801_L43C014", "hB_RNA_4862", "hB_RNA_4881_L43C014", "hB_RNA_4891_L43C014", 
+  "hB_RNA_4923_L43C014", "hB_RNA_4946_L43C014", "hB_RNA_4951_L43C014", "hB_RNA_4961_L43C014", "hB_RNA_4980", 
+  "hB_RNA_5011_L43C014", "hB_RNA_5021", "hB_RNA_5031_L43C014", "hB_RNA_8555", "hB_RNA_8935",
+  "hB_RNA_8675_L43C014", "BM_10_638", "BM_10_687", "BM_10_634", "hB_RNA_13266", "hB_RNA_13276",
+  "hB_RNA_13294", "BM_10_727", "hB_RNA_13389", "hB_RNA_13406", "BM_10_636", "BM_10_598",
+  "BM_10_742", "BM_10_554", "BM_10_606", "hB_RNA_13500", "BM_10_620", "hB_RNA_13518", 
+  "hB_RNA_13547", "BM_10_627", "hB_RNA_13631", "BM_10_557", "BM_10_673", "hB_RNA_13058",
+  "hB_RNA_13068_resequenced", "hB_RNA_13081", "hB_RNA_13048_resequenced", "hB_RNA_13216_resequenced", 
+  "hB_RNA_13032_L43C014", "hB_RNA_13375")
+total_toss <- c(sex_swapped,expression_outliers,resequenced_tossed)
 
 ################################################################################
 ## --   Push to Synapse   --  ##
