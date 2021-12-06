@@ -504,10 +504,11 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv")
 
 # Indv Tissue Metadata for sage-seqr
+row.names(comb_uncensored) <- comb_uncensored$specimenID
 for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
   tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
- 
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
   activityDescription = 'Cleaned Codified and Recoded Ages Uncensored Metadata'
   
   write.csv(tiss_file,
@@ -528,6 +529,81 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
   file.remove(paste0(tiss,'_Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv'))
+  
+  #Braak
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  tiss_file$braaksc <- comb_uncensored[tiss_file$specimenID,]$braaksc
+  meta_braak <- tiss_file[complete.cases(tiss_file),]
+  
+  write.csv(meta_braak[ , colnames(meta_braak)[!(colnames(meta_braak) %in% 'tissue')]],
+            file = paste0('Sageseqr_RosMap_', tiss,'_RNASeq_Braak_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_RosMap_', tiss,'_RNASeq_Braak_Covariates.csv'),
+    name = paste0('RosMap ', tiss,' Sageseqr Input Braak Covariates'),
+    parentId=activity$properties$id ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_RosMap_', tiss,'_RNASeq_Braak_Covariates.csv'))
+  
+  #Cerad
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  tiss_file$ceradsc <- comb_uncensored[tiss_file$specimenID,]$ceradsc
+  meta_ceradsc <- tiss_file[complete.cases(tiss_file),]
+  
+  write.csv(meta_ceradsc[ , colnames(meta_ceradsc)[!(colnames(meta_ceradsc) %in% 'tissue')]],
+            file = paste0('Sageseqr_RosMap_', tiss,'_RNASeq_Cerad_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_RosMap_', tiss,'_RNASeq_Cerad_Covariates.csv'),
+    name = paste0('RosMap ', tiss,' Sageseqr Input Cerad Covariates'),
+    parentId=activity$properties$id ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_RosMap_', tiss,'_RNASeq_Cerad_Covariates.csv'))
+  
+  #CogDx
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$cogdx <- comb_uncensored[tiss_file$specimenID,]$cogdx
+  meta_cogdx <- tiss_file[complete.cases(tiss_file),]
+  
+  write.csv(meta_cogdx[ , colnames(meta_cogdx)[!(colnames(meta_cogdx) %in% 'tissue')]],
+            file = paste0('Sageseqr_RosMap_', tiss,'_RNASeq_CogDx_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_RosMap_', tiss,'_RNASeq_CogDx_Covariates.csv'),
+    name = paste0('RosMap ', tiss,' Sageseqr Input CogDx Covariates'),
+    parentId=activity$properties$id ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_RosMap_', tiss,'_RNASeq_CogDx_Covariates.csv'))
 }
 
 
@@ -556,6 +632,85 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
   file.remove(paste0(tiss,'Rinover5_Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv'))
+  
+  #Braak
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$braaksc <- comb_uncensored[tiss_file$specimenID,]$braaksc
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  meta_braak <- tiss_file[complete.cases(tiss_file),]
+
+  write.csv(meta_braak,
+            file = paste0(tiss,
+                          'Rinover5_Sageseqr_ROSMAP_Braak_Covariates_Uncensored.csv'
+            ),
+            row.names = F,
+            quote = F
+  )
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path= paste0(tiss,'Rinover5_Sageseqr_ROSMAP_Braak_Covariates_Uncensored.csv'),
+    name = paste0(tiss, 'Rin over 5 RosMap Braak Ages Uncensored Sageseqr Input Covariates'),
+    parentId='syn26242659' ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0(tiss,'Rinover5_Sageseqr_ROSMAP_Braak_Covariates_Uncensored.csv'))
+  
+  #Cerad
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$ceradsc <- comb_uncensored[tiss_file$specimenID,]$ceradsc
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  meta_ceradsc <- tiss_file[complete.cases(tiss_file),]
+
+  write.csv(meta_ceradsc,
+            file = paste0(tiss,
+                          'Rinover5_Sageseqr_ROSMAP_Cerad_Covariates_Uncensored.csv'
+            ),
+            row.names = F,
+            quote = F
+  )
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path= paste0(tiss,'Rinover5_Sageseqr_ROSMAP_Cerad_Covariates_Uncensored.csv'),
+    name = paste0(tiss, 'Rin over 5 RosMap Cerad Ages Uncensored Sageseqr Input Covariates'),
+    parentId='syn26242659' ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0(tiss,'Rinover5_Sageseqr_ROSMAP_Cerad_Covariates_Uncensored.csv'))
+  
+  #Cerad
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$cogdx <- comb_uncensored[tiss_file$specimenID,]$cogdx
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  meta_CogDx <- tiss_file[complete.cases(tiss_file),]
+
+  write.csv(meta_CogDx,
+            file = paste0(tiss,
+                          'Rinover5_Sageseqr_ROSMAP_CogDx_Covariates_Uncensored.csv'
+            ),
+            row.names = F,
+            quote = F
+  )
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path= paste0(tiss,'Rinover5_Sageseqr_ROSMAP_CogDx_Covariates_Uncensored.csv'),
+    name = paste0(tiss, 'Rin over 5 RosMap CogDx Ages Uncensored Sageseqr Input Covariates'),
+    parentId='syn26242659' ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0(tiss,'Rinover5_Sageseqr_ROSMAP_CogDx_Covariates_Uncensored.csv'))
+  
 }
 
 ## Upload Sageseqr ages Censored file to synapse
@@ -776,6 +931,105 @@ for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
   file.remove(paste0(tiss, '_Rinover5_ROSMAP_counts.txt'))
+  
+  #Braak
+  counts_write <- counts
+  counts_write <- counts_write[ ,comb_uncensored_sageseqr$specimenID ]
+  counts_write$feature <- row.names(counts_write)
+  
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$braaksc <- comb_uncensored[tiss_file$specimenID,]$braaksc
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  meta_braak <- tiss_file[complete.cases(tiss_file),]
+  
+  counts_write <- counts_write[,c('feature',meta_braak$specimenID)]
+  
+  write.table(counts_write,
+              file = paste0(tiss, '_Rinover5_ROSMAP_Braak_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path=paste0(tiss, '_Rinover5_ROSMAP_Braak_counts.txt'),
+    name = paste0(tiss,' Rin over 5 RosMap Sageseqr Braak Input Counts'),
+    parentId='syn26242660'),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0(tiss, '_Rinover5_ROSMAP_Braak_counts.txt'))
+  
+  #Cerad
+  counts_write <- counts
+  counts_write <- counts_write[ ,comb_uncensored_sageseqr$specimenID ]
+  counts_write$feature <- row.names(counts_write)
+  
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$ceradsc <- comb_uncensored[tiss_file$specimenID,]$ceradsc
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  meta_ceradsc <- tiss_file[complete.cases(tiss_file),]
+  
+  counts_write <- counts_write[,c('feature',meta_ceradsc$specimenID)]
+  
+  write.table(counts_write,
+              file = paste0(tiss, '_Rinover5_ROSMAP_Cerad_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path=paste0(tiss, '_Rinover5_ROSMAP_Cerad_counts.txt'),
+    name = paste0(tiss,' Rin over 5 RosMap Sageseqr Cerad Input Counts'),
+    parentId='syn26242660'),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0(tiss, '_Rinover5_ROSMAP_Cerad_counts.txt'))
+  
+  #CogDx
+  counts_write <- counts
+  counts_write <- counts_write[ ,comb_uncensored_sageseqr$specimenID ]
+  counts_write$feature <- row.names(counts_write)
+  
+  tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  tiss_file$cogdx <- comb_uncensored[tiss_file$specimenID,]$cogdx
+  tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
+  meta_cogdx <- tiss_file[complete.cases(tiss_file),]
+  
+  counts_write <- counts_write[,c('feature',meta_cogdx$specimenID)]
+  
+  write.table(counts_write,
+              file = paste0(tiss, '_Rinover5_ROSMAP_CogDx_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File( 
+    path=paste0(tiss, '_Rinover5_ROSMAP_CogDx_counts.txt'),
+    name = paste0(tiss,' Rin over 5 RosMap Sageseqr CogDx Input Counts'),
+    parentId='syn26242660'),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0(tiss, '_Rinover5_ROSMAP_CogDx_counts.txt'))
 }
  
 
