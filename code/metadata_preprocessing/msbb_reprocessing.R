@@ -122,7 +122,7 @@ clinical[ clinical$braaksc <= 3 &
             clinical$CDR <= 0.5  , ]$diagnosis <- 'CT'
 
 # apoe Allele:
-used_synids <- c(used_synids,biospecimin,'syn26452711')
+used_synids <- c(used_synids,'syn26452711')
 
 apoe_fix <- read.csv(synapser::synGet('syn26452711')$path)
 row.names(apoe_fix) <- apoe_fix$individualID
@@ -485,7 +485,78 @@ for( tis in names(table(sageseqr_censored$tissue))){
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
   file.remove(paste0('Sageseqr_MSBB_', tis,'_RNASeq_Covariates.csv'))
-
+  
+  #Braak
+  row.names(metadata) <- metadata$specimenID
+  meta_braak <- meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]]
+  meta_braak$braaksc <- metadata[meta_braak$specimenID,]$braaksc
+  meta_braak <- meta_braak[complete.cases(meta_braak),]
+  
+  write.csv(meta_braak[ , colnames(meta_braak)[!(colnames(meta_braak) %in% 'tissue')]],
+            file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_Braak_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_MSBB_', tis,'_RNASeq_Braak_Covariates.csv'),
+    name = paste0('MSBB ', tis,' Sageseqr Input  Braak Covariates'),
+    parentId=activity$properties$id ),
+    used = used_synids,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_MSBB_', tis,'_RNASeq_Braak_Covariates.csv'))
+  
+  ## Cerad
+  row.names(metadata) <- metadata$specimenID
+  meta_ceradsc <- meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]]
+  meta_ceradsc$ceradsc <- metadata[meta_ceradsc$specimenID,]$ceradsc
+  meta_ceradsc <- meta_ceradsc[complete.cases(meta_ceradsc),]
+  
+  write.csv(meta_ceradsc[ , colnames(meta_ceradsc)[!(colnames(meta_ceradsc) %in% 'tissue')]],
+            file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_Cerad_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_MSBB_', tis,'_RNASeq_Cerad_Covariates.csv'),
+    name = paste0('MSBB ', tis,' Sageseqr Input  Cerad Covariates'),
+    parentId=activity$properties$id ),
+    used = used_synids,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_MSBB_', tis,'_RNASeq_Cerad_Covariates.csv'))
+  
+  ## CogDx
+  row.names(metadata) <- metadata$specimenID
+  meta_cogdx <- meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]]
+  meta_cogdx$cogdx <- metadata[meta_cogdx$specimenID,]$CDR
+  meta_cogdx <- meta_cogdx[complete.cases(meta_cogdx),]
+  
+  write.csv(meta_cogdx[ , colnames(meta_cogdx)[!(colnames(meta_cogdx) %in% 'tissue')]],
+            file = paste0('Sageseqr_MSBB_', tis,'_RNASeq_CogDx_Covariates.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_MSBB_', tis,'_RNASeq_CogDx_Covariates.csv'),
+    name = paste0('MSBB ', tis,' Sageseqr Input CogDx Covariates'),
+    parentId=activity$properties$id ),
+    used = used_synids,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0('Sageseqr_MSBB_', tis,'_RNASeq_CogDx_Covariates.csv'))
 }
 
 ## Upload Sageseqr counts
@@ -543,6 +614,7 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
 file.remove("MSBB_counts.txt")
 
+
 for( tis in names(table(sageseqr_censored$tissue))){
   meta_write <- sageseqr_uncensored[as.character(sageseqr_uncensored$tissue) == tis,]
   meta_write <- meta_write[complete.cases(meta_write),]
@@ -570,5 +642,97 @@ for( tis in names(table(sageseqr_censored$tissue))){
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
   file.remove(paste0('MSBB_', tis, '_counts.txt'))
+  
+  #Braak
+  row.names(metadata) <- metadata$specimenID
+  meta_braak <- meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]]
+  meta_braak$braaksc <- metadata[meta_braak$specimenID,]$braaksc
+  meta_braak <- meta_braak[complete.cases(meta_braak),]
+  
+  counts_wr <- counts_write[,c('feature',
+                               colnames(counts_write)[(colnames(counts_write) %in% meta_braak$specimenID)]
+  )
+  ]
+  write.table(counts_wr,
+              file = paste0('MSBB_', tis, 'Braak_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MSBB_', tis, 'Braak_counts.txt'),
+    name = paste0('MSBB ', tis, ' Sageseqr Braak Input Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MSBB_', tis, 'Braak_counts.txt'))
+  
+  ## Cerad
+  row.names(metadata) <- metadata$specimenID
+  meta_ceradsc <- meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]]
+  meta_ceradsc$ceradsc <- metadata[meta_ceradsc$specimenID,]$ceradsc
+  meta_ceradsc <- meta_ceradsc[complete.cases(meta_ceradsc),]
+  
+  counts_wr <- counts_write[,c('feature',
+                               colnames(counts_write)[(colnames(counts_write) %in% meta_ceradsc$specimenID)]
+  )
+  ]
+  write.table(counts_wr,
+              file = paste0('MSBB_', tis, 'Cerad_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MSBB_', tis, 'Cerad_counts.txt'),
+    name = paste0('MSBB ', tis, ' Sageseqr Cerad Input Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MSBB_', tis, 'Cerad_counts.txt'))
+  
+  ## CogDx
+  row.names(metadata) <- metadata$specimenID
+  meta_cogdx <- meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]]
+  meta_cogdx$cogdx <- metadata[meta_cogdx$specimenID,]$CDR
+  meta_cogdx <- meta_cogdx[complete.cases(meta_cogdx),]
+  
+  counts_wr <- counts_write[,c('feature',
+                               colnames(counts_write)[(colnames(counts_write) %in% meta_cogdx$specimenID)]
+  )
+  ]
+  write.table(counts_wr,
+              file = paste0('MSBB_', tis, 'CogDx_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MSBB_', tis, 'CogDx_counts.txt'),
+    name = paste0('MSBB ', tis, ' Sageseqr CogDx Input Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MSBB_', tis, 'CogDx_counts.txt'))
+  
+  
 }
 
