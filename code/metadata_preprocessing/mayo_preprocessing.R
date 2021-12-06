@@ -413,6 +413,7 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored.csv")
 
 # write the independent tissue metadata files
+row.names(metadata) <- metadata$specimenID
 for( tis in c('TCX','CBE')){
   meta_write <- metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]
   write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
@@ -432,7 +433,51 @@ for( tis in c('TCX','CBE')){
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
   file.remove(paste0("Sageseqr_Mayo_", tis,"_RNASeq_Covariates_Censored.csv"))
-
+  
+  #Braak
+  meta_write <- metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]
+  meta_write$braaksc <- metadata[meta_write$specimenID,]$braaksc
+  meta_write <- meta_write[complete.cases(meta_write),]
+  write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
+            file = paste0('Sageseqr_Mayo_', tis,'_RNASeq_Braak.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_Mayo_', tis,'_RNASeq_Braak.csv'),
+    name = paste0('Mayo ', tis,' Sageseqr Input Braak Covariates'),
+    parentId=activity$properties$id ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0("Sageseqr_Mayo_", tis,"_RNASeq_Braak.csv"))
+  
+  #Thal
+  meta_write <- metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]
+  meta_write$thal <- metadata[meta_write$specimenID,]$thal
+  meta_write <- meta_write[complete.cases(meta_write),]
+  write.csv(meta_write[ , colnames(meta_write)[!(colnames(meta_write) %in% 'tissue')]],
+            file = paste0('Sageseqr_Mayo_', tis,'_RNASeq_Thal.csv'),
+            row.names = F,
+            quote = F
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('Sageseqr_Mayo_', tis,'_RNASeq_Thal.csv'),
+    name = paste0('Mayo ', tis,' Sageseqr Input Thal Covariates'),
+    parentId=activity$properties$id ),
+    used = synids_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+  file.remove(paste0("Sageseqr_Mayo_", tis,"_RNASeq_Thal.csv"))
+  
 }
 ## Upload Sageseqr counts
 counts_used <- c('syn21544635')
@@ -489,7 +534,7 @@ file.remove("MAYO_counts.txt")
 
 
 for( tis in c('TCX','CBE')){
-
+  
   keeps <- c('feature', as.character(
     metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]$specimenID
   ))
@@ -513,4 +558,62 @@ for( tis in c('TCX','CBE')){
   )
   synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
   file.remove(paste0('MAYO_', tis,'_counts.txt'))
+  
+  #Braaksc
+  meta_write <- metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]
+  meta_write$braaksc <- metadata[meta_write$specimenID,]$braaksc
+  meta_write <- meta_write[complete.cases(meta_write),]
+  
+  keeps <- c('feature', as.character(
+    meta_write$specimenID
+  ))
+  
+  write.table(counts_write[,keeps],
+              file = paste0('MAYO_', tis,'_Braak_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MAYO_', tis,'_Braak_counts.txt'),
+    name = paste0('MAYO ', tis, ' Sageseqr Input Braak Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MAYO_', tis,'_Braak_counts.txt'))
+  
+  #Thal
+  meta_write <- metadata_sageqr[as.character(metadata_sageqr$tissue) == tis,]
+  meta_write$thal <- metadata[meta_write$specimenID,]$thal
+  meta_write <- meta_write[complete.cases(meta_write),]
+  
+  keeps <- c('feature', as.character(
+    meta_write$specimenID
+  ))
+  
+  write.table(counts_write[,keeps],
+              file = paste0('MAYO_', tis,'_Thal_counts.txt'),
+              row.names = F,
+              col.names = T,
+              quote = F,
+              sep = '\t'
+  )
+  
+  ENRICH_OBJ <- synapser::synStore( synapser::File(
+    path=paste0('MAYO_', tis,'_Thal_counts.txt'),
+    name = paste0('MAYO ', tis, ' Sageseqr Input Thal Counts'),
+    parentId=activity$properties$id ),
+    used = counts_used,
+    activityName = activityName,
+    executed = thisFile,
+    activityDescription = activityDescription
+  )
+  synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations.expression)
+  file.remove(paste0('MAYO_', tis,'_Thal_counts.txt'))
 }
