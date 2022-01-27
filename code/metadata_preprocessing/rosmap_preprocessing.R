@@ -477,7 +477,7 @@ file.remove("Full_ROSMAP_RNASeq_Covariates_Uncensored.csv")
 ## Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
 # Full Rosmap Cohort:
 comb_uncensored_sageseqr <- comb_uncensored[,c(
-  'specimenID',	'diagnosis',	'tissue',	'race',	'spanish',	'apoe4_allele',
+  'specimenID', 'individualID', 'diagnosis',	'tissue',	'race',	'spanish',	'apoe4_allele',
   'sex',	'final_batch',	'pmi',	'RIN',	'RIN2',	'age_death',	
   'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED',	
   'RnaSeqMetrics_PCT_INTRONIC_BASES', 'RnaSeqMetrics_PCT_INTERGENIC_BASES',
@@ -507,7 +507,8 @@ file.remove("Sageseqr_ROSMAP_RNASeq_Covariates_Uncensored.csv")
 row.names(comb_uncensored) <- comb_uncensored$specimenID
 for (tiss in c('ACC', 'DLPFC', 'PCC' )) {
   tiss_file <- comb_uncensored_sageseqr[comb_uncensored_sageseqr$tissue == tiss,]
-  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%'tissue')]]
+  
+  tiss_file <- tiss_file[,colnames(tiss_file)[!(colnames(tiss_file)%in%c('individualID','tissue'))]]
   tiss_file <- tiss_file[ tiss_file$RIN >= 5, ]
   activityDescription = 'Cleaned Codified and Recoded Ages Uncensored Metadata'
   
