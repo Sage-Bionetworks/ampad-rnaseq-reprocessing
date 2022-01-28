@@ -298,6 +298,14 @@ metadata_sageqr <- metadata_sageqr[
 ]
 
 count <- count[, !(colnames(count) %in% indToRemove)]
+metadata_sageqr_indv <- metadata_sageqr[ ,
+  c( 'specimenID', 'individualID', 'tissue', 'diagnosis', 'tissue',
+    'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
+    'RIN2',	'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED',
+    'RnaSeqMetrics_PCT_INTRONIC_BASES', 'RnaSeqMetrics_PCT_INTERGENIC_BASES',
+    'RnaSeqMetrics_PCT_CODING_BASES'
+                                         )
+]
 metadata_sageqr <- metadata_sageqr[ ,
   c( 'specimenID', 'tissue', 'diagnosis',
      'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
@@ -411,6 +419,26 @@ ENRICH_OBJ <- synapser::synStore( synapser::File(
 )
 synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored.csv")
+
+### W/indv.ID
+
+write.csv(metadata_sageqr_indv,
+          file = 'Sageseqr_Mayo_RNASeq_Covariates_Censored_indvID.csv',
+          row.names = F,
+          quote = F
+)
+
+ENRICH_OBJ <- synapser::synStore( synapser::File(
+  path='Sageseqr_Mayo_RNASeq_Covariates_Censored_indvID.csv',
+  name = 'Mayo Sageseqr Input Covariates with Indv ID',
+  parentId=activity$properties$id ),
+  used = synids_used,
+  activityName = activityName,
+  executed = thisFile,
+  activityDescription = activityDescription
+)
+synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored_indvID.csv")
 
 # write the independent tissue metadata files
 row.names(metadata) <- metadata$specimenID
