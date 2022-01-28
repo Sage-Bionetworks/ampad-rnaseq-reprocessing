@@ -407,6 +407,32 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Cleaned_MSBB_RNASeq_Covariates.csv")
 
 ## Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
+sageseqr_uncensored_indv <- sageseqr_uncensored
+temp <- metadata
+row.names(temp) <- metadata$specimenID
+sageseqr_uncensored_indv$individualID <- temp[ sageseqr_uncensored_indv$specimenID,]$individualID
+activityDescription = 'Sageseqr Input Metadata'
+
+write.csv(sageseqr_uncensored_indv,
+          file = 'Sageseqr_MSBB_RNASeq_Uncensored_Covariates_withIndvID.csv',
+          row.names = F,
+          quote = F
+)
+
+ENRICH_OBJ <- synapser::synStore( synapser::File(
+  path='Sageseqr_MSBB_RNASeq_Uncensored_Covariates_withIndvID.csv',
+  name = 'MSBB  Ages Uncensored Sageseqr Input Covariates w Indv ID',
+  parentId=activity$properties$id ),
+  used = used_synids,
+  activityName = activityName,
+  executed = thisFile,
+  activityDescription = activityDescription
+)
+synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
+file.remove("Sageseqr_MSBB_RNASeq_Uncensored_Covariates_withIndvID.csv")
+
+
+## Upload Sageseqr file and SageSeqr input version to synapse - internal Sage Location:
 activityDescription = 'Sageseqr Input Metadata'
 
 write.csv(sageseqr_uncensored,
@@ -442,6 +468,7 @@ for(i in 1:length(children)) {
     cesoredmeta_used <- children[[i]]$id
   }
 }
+
 sageseqr_censored <- sageseqr_censored[!is.na(sageseqr_censored$individualID), ]
 write.csv(sageseqr_censored,
           file = 'Sageseqr_MSBB_RNASeq_Covariates_Censored.csv',
