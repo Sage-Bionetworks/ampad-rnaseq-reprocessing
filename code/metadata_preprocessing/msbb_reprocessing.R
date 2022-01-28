@@ -411,7 +411,7 @@ sageseqr_uncensored_indv <- sageseqr_uncensored
 temp <- metadata
 row.names(temp) <- metadata$specimenID
 sageseqr_uncensored_indv$individualID <- temp[ sageseqr_uncensored_indv$specimenID,]$individualID
-activityDescription = 'Sageseqr Input Metadata'
+activityDescription = 'Sageseqr Input Metadata with IndvID'
 
 write.csv(sageseqr_uncensored_indv,
           file = 'Sageseqr_MSBB_RNASeq_Uncensored_Covariates_withIndvID.csv',
