@@ -411,6 +411,7 @@ sageseqr_uncensored_indv <- sageseqr_uncensored
 temp <- metadata
 row.names(temp) <- metadata$specimenID
 sageseqr_uncensored_indv$individualID <- temp[ sageseqr_uncensored_indv$specimenID,]$individualID
+sageseqr_uncensored_indv <- sageseqr_uncensored_indv[!is.na(sageseqr_uncensored_indv$apoe4_allele),]
 activityDescription = 'Sageseqr Input Metadata with IndvID'
 
 write.csv(sageseqr_uncensored_indv,

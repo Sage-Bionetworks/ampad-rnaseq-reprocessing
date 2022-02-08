@@ -421,8 +421,9 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = all.annotations)
 file.remove("Sageseqr_Mayo_RNASeq_Covariates_Censored.csv")
 
 ### W/indv.ID
+activityDescription = 'Cleaned Codified and Recoded Metadata w Indv ID'
 
-write.csv(metadata_sageqr_indv,
+write.csv(metadata_sageqr_indv[,!(colnames(metadata_sageqr_indv)=='tissue.1'),],
           file = 'Sageseqr_Mayo_RNASeq_Covariates_Censored_indvID.csv',
           row.names = F,
           quote = F
