@@ -617,6 +617,7 @@ all.annotations.expression = list(
 )
 
 counts_write <- counts
+counts_write <- counts_write[,sageseqr_uncensored_indv$specimenID]
 counts_write$feature <- row.names(counts_write)
 counts_write <- counts_write[,c('feature',
                                 colnames(counts_write)[!(colnames(counts_write) %in% 'feature')]
