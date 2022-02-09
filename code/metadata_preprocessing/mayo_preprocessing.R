@@ -298,6 +298,10 @@ metadata_sageqr <- metadata_sageqr[
 ]
 
 count <- count[, !(colnames(count) %in% indToRemove)]
+
+metadata_sageqr$flowcell <- 
+  paste0( metadata_sageqr$flowcell, '.', metadata_sageqr$specimenIdSource )
+
 metadata_sageqr_indv <- metadata_sageqr[ ,
   c( 'specimenID', 'individualID', 'tissue', 'diagnosis', 'tissue',
     'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
