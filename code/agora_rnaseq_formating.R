@@ -200,7 +200,6 @@ thisFile <- githubr::getPermlink(
 # Expression Stats
 write.csv(de_stats, 'amp_ad_median_expression.csv',
             row.names = F,
-            sep='\t',
             quote = F
 )
 
@@ -222,6 +221,7 @@ file.remove("amp_ad_median_expression.csv")
 # DE Stats
 write.table(exp_stats, 'differentialExpressionSummary.tsv',
             row.names = F,
+            col.names = T,
             sep='\t',
             quote = F
 )
