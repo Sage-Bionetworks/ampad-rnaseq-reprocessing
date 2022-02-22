@@ -198,7 +198,7 @@ thisFile <- githubr::getPermlink(
 #push files to synapse:
 
 # Expression Stats
-write.csv(de_stats, 'amp_ad_median_expression.csv',
+write.csv(exp_stats, 'amp_ad_median_expression.csv',
             row.names = F,
             quote = F
 )
@@ -219,7 +219,7 @@ synapser::synSetAnnotations(ENRICH_OBJ, annotations = exp_annot)
 file.remove("amp_ad_median_expression.csv")
 
 # DE Stats
-write.table(exp_stats, 'differentialExpressionSummary.tsv',
+write.table(de_stats, 'differentialExpressionSummary.tsv',
             row.names = F,
             col.names = T,
             sep='\t',
