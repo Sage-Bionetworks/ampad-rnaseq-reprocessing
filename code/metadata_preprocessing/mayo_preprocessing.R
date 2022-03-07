@@ -303,7 +303,7 @@ metadata_sageqr$flowcell <-
   paste0( metadata_sageqr$flowcell, '.', metadata_sageqr$specimenIdSource )
 
 metadata_sageqr_indv <- metadata_sageqr[ ,
-  c( 'specimenID', 'individualID', 'tissue', 'diagnosis', 'tissue',
+  c( 'specimenID', 'individualID', 'tissue', 'diagnosis',
     'apoe4_allele',	'sex', 'flowcell',	'pmi', 'RIN',
     'RIN2',	'age_death', 'AlignmentSummaryMetrics_PCT_PF_READS_ALIGNED',
     'RnaSeqMetrics_PCT_INTRONIC_BASES', 'RnaSeqMetrics_PCT_INTERGENIC_BASES',
