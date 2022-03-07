@@ -66,7 +66,7 @@ file_handle <- list(meta = 'csv',
 annots <- list(meta = 'syn25808375',
                counts = 'syn25808335')
 git_info <- list( repo ='Sage-Bionetworks/ampad-rnaseq-reprocessing',
-                  file = 'code/neuropath_regression.R',
+                  file = 'code/metadata_preprocessing/neuropath_regression.R',
                   branch = 'main')
 activ <- list(
     meta = list( name ='RosMap Braak Metadata',
@@ -77,7 +77,7 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
   
   #Github Info Pull
   thisRepo <- githubr::getRepo(repository = git_info[['repo']], ref="branch", refName=git_info[['branch']])
-  thisFile <- githubr::getPermlink(repository = thisRepo, repositoryPath=git_info[['file']])
+  thisFile <- githubr::getPermlink(repository = thisRepo, repositoryPath='code/metadata_preprocessing/neuropath_regression.R')
   
   for( file in c('meta','counts')){
     # Write File
