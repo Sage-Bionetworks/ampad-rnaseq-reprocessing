@@ -162,7 +162,7 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
   )
 
 ## CogDX
-  cerad <- process( 
+  cogdx <- process( 
     syns = list(
       ACC = 'syn26529004',
       PCC = 'syn26529013',
@@ -173,7 +173,7 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
   )
   
   synapse_push(
-    object = cerad,
+    object = cogdx,
     parentID = list(meta = 'syn27554311', counts = 'syn27554261'),
     used_syns = c('syn26529004', 'syn26529013', 'syn26529010', 'syn25808335', 'syn25792425'),
     file_names <- list(meta = 'RosMap_CogDX_Metadata', counts = 'RosMap_CogDX_Counts'),
