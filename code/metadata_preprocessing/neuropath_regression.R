@@ -33,19 +33,6 @@ process <- function( syns, counts, inds ){
   
 }
 
-# RosMap
-
-#Braak
-braak <- process( 
-  syns = list(
-    ACC = 'syn26528995',
-    PCC = 'syn26529011',
-    DLPFC = 'syn26529008' 
-    ),
-  counts = 'syn25808335',
-  inds = 'syn25792425'
-)
-
 #' @param object a named list of `meta` and `counts`
 #' @param parentID a `meta` and `counts` named list of folder parent IDs to push synapse meta and counts
 #' @param used_syns the names of syn IDs to use for provenance
@@ -115,21 +102,90 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
   }
 }
 
-synapse_push(
-  object = braak,
-  parentID = list(meta = 'syn27554188', counts = 'syn27554176'),
-  used_syns = c('syn26528995', 'syn26529011', 'syn26529008', 'syn25808335', 'syn25792425'),
-  file_names <- list(meta = 'RosMap_Braak_Metadata', counts = 'RosMap_Braak_Counts'),
-  file_handle = list(meta = 'csv',  counts = 'tsv'),
-  annots = list(meta = 'syn25808375', counts = 'syn25808335'),
-  git_info = list( repo ='Sage-Bionetworks/ampad-rnaseq-reprocessing',
-                    file = 'code/metadata_preprocessing/neuropath_regression.R',
-                    branch = 'main'),
-  activ = list(
-    meta = list( name ='RosMap Braak Metadata',
-                 description = 'RosMap metadata samples with Braak annotated'),
-    counts = list( name ='RosMap Braak Counts',
-                   description = 'RosMap Count Data matched to samples with Braak annotated'))
-)
 
+# RosMap
 
+## Braak
+  braak <- process( 
+    syns = list(
+      ACC = 'syn26528995',
+      PCC = 'syn26529011',
+      DLPFC = 'syn26529008' 
+    ),
+    counts = 'syn25808335',
+    inds = 'syn25792425'
+  )
+  
+  synapse_push(
+    object = braak,
+    parentID = list(meta = 'syn27554311', counts = 'syn27554261'),
+    used_syns = c('syn26528995', 'syn26529011', 'syn26529008', 'syn25808335', 'syn25792425'),
+    file_names <- list(meta = 'RosMap_Braak_Metadata', counts = 'RosMap_Braak_Counts'),
+    file_handle = list(meta = 'csv',  counts = 'tsv'),
+    annots = list(meta = 'syn25808375', counts = 'syn25808335'),
+    git_info = list( repo ='Sage-Bionetworks/ampad-rnaseq-reprocessing',
+                      file = 'code/metadata_preprocessing/neuropath_regression.R',
+                      branch = 'main'),
+    activ = list(
+      meta = list( name ='RosMap Braak Metadata',
+                   description = 'RosMap metadata samples with Braak annotated'),
+      counts = list( name ='RosMap Braak Counts',
+                     description = 'RosMap Count Data matched to samples with Braak annotated'))
+  )
+
+## CERAD
+  cerad <- process( 
+    syns = list(
+      ACC = 'syn26529000',
+      PCC = 'syn26529012',
+      DLPFC = 'syn26529009' 
+    ),
+    counts = 'syn25808335',
+    inds = 'syn25792425'
+  )
+  
+  synapse_push(
+    object = cerad,
+    parentID = list(meta = 'syn27554311', counts = 'syn27554261'),
+    used_syns = c('syn26529000', 'syn26529012', 'syn26529009', 'syn25808335', 'syn25792425'),
+    file_names <- list(meta = 'RosMap_Cerad_Metadata', counts = 'RosMap_Cerad_Counts'),
+    file_handle = list(meta = 'csv',  counts = 'tsv'),
+    annots = list(meta = 'syn25808375', counts = 'syn25808335'),
+    git_info = list( repo ='Sage-Bionetworks/ampad-rnaseq-reprocessing',
+                     file = 'code/metadata_preprocessing/neuropath_regression.R',
+                     branch = 'main'),
+    activ = list(
+      meta = list( name ='RosMap Cerad Metadata',
+                   description = 'RosMap metadata samples with Cerad annotated'),
+      counts = list( name ='RosMap Cerad Counts',
+                     description = 'RosMap Count Data matched to samples with Cerad annotated'))
+  )
+
+## CogDX
+  cerad <- process( 
+    syns = list(
+      ACC = 'syn26529004',
+      PCC = 'syn26529013',
+      DLPFC = 'syn26529010' 
+    ),
+    counts = 'syn25808335',
+    inds = 'syn25792425'
+  )
+  
+  synapse_push(
+    object = cerad,
+    parentID = list(meta = 'syn27554311', counts = 'syn27554261'),
+    used_syns = c('syn26529004', 'syn26529013', 'syn26529010', 'syn25808335', 'syn25792425'),
+    file_names <- list(meta = 'RosMap_CogDX_Metadata', counts = 'RosMap_CogDX_Counts'),
+    file_handle = list(meta = 'csv',  counts = 'tsv'),
+    annots = list(meta = 'syn25808375', counts = 'syn25808335'),
+    git_info = list( repo ='Sage-Bionetworks/ampad-rnaseq-reprocessing',
+                     file = 'code/metadata_preprocessing/neuropath_regression.R',
+                     branch = 'main'),
+    activ = list(
+      meta = list( name ='RosMap CogDX Metadata',
+                   description = 'RosMap metadata samples with CogDX annotated'),
+      counts = list( name ='RosMap CogDX Counts',
+                     description = 'RosMap Count Data matched to samples with CogDX annotated'))
+  )
+  
