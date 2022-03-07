@@ -77,7 +77,7 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
   
   #Github Info Pull
   thisRepo <- githubr::getRepo(repository = git_info[['repo']], ref="branch", refName=git_info[['branch']])
-  thisFile <- githubr::getPermlink(repository = thisRepo, repositoryPath='code/metadata_preprocessing/neuropath_regression.R')
+  thisFile <- githubr::getPermlink(repository = thisRepo, repositoryPath=git_info[['file']])
   
   for( file in c('meta','counts')){
     # Write File
@@ -86,7 +86,6 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
         object[[file]], 
         file = paste0(file_names[file], '.',file_handle[file]), 
         row.names = F, 
-        col.names = T, 
         quote = F)
     }else{
       write.table(
@@ -105,7 +104,7 @@ synapse_push <- function( object, parentID, used_syns, file_handle, file_names, 
       parentId = parentID[[file]]),
       used = used_syns, 
       activityName = activ[[file]][['name']], 
-      executed = , 
+      executed = thisFile, 
       activityDescription = activ[[file]][['description']]
     )
     #Copy annotations from existing objects
